@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blueLightBackground"
+    tools:context=".GraphActivity">
+
+    <!--<TextView-->
+    <!--android:id="@+id/message"-->
+    <!--android:layout_width="209dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_alignParentTop="true"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginTop="19dp"-->
+    <!--android:text="@string/title_home" />-->
+
+    <!--<com.github.mikephil.charting.charts.BarChart-->
+    <!--android:id="@+id/barchart"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="#FFFFFF">-->
+    <!--</com.github.mikephil.charting.charts.BarChart>-->
+
+
+    <!--<include-->
+        <!--android:id="@+id/bottomContainerGraph"-->
+        <!--layout="@layout/graph_bottom_container"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_above="@+id/navigation"-->
+        <!--android:layout_alignParentStart="true" />-->
+
+    <!--<include-->
+        <!--android:id="@+id/date_container"-->
+        <!--layout="@layout/date_containter"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="55sp"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginStart="0dp"-->
+        <!--android:background="#d6d7d7" />-->
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="765dp"
+        android:layout_height="53dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/gray"
+        android:layout_alignParentStart="true"
+        app:menu="@menu/navigation" />
+    <!--android:background="?android:attr/windowBackground"-->
+
+    <FrameLayout
+        android:id="@+id/chatFragment_containter"
+        android:layout_width="match_parent"
+        android:layout_height="505dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="5sp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="5sp"
+        android:layout_marginBottom="5dp">
+
+    </FrameLayout>
+
+    <!--<Button-->
+        <!--android:id="@+id/buttonListview"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/graphFragment_containter"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="-60sp"-->
+        <!--android:text="@string/graph_history" />-->
+
+
+</RelativeLayout>

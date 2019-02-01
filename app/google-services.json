@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "394486054311",
+    "firebase_url": "https://letsbone-5e4c7.firebaseio.com",
+    "project_id": "letsbone-5e4c7",
+    "storage_bucket": "letsbone-5e4c7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:394486054311:android:712e147332a830cb",
+        "android_client_info": {
+          "package_name": "com.mobile.letsbone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "394486054311-pvrtdcgcuqtajg4ofuo3e1u0o6ql4001.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mobile.letsbone",
+            "certificate_hash": "71b0e6b97a25caacae4534fff673ef0a3f7a27ac"
+          }
+        },
+        {
+          "client_id": "394486054311-aoau04nr6gp5e7ggu7327j6riatkh984.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdOlBtDSZdaCZzDMmGiQyoOmhYpnUMcsU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "394486054311-aoau04nr6gp5e7ggu7327j6riatkh984.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

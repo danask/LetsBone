@@ -1,0 +1,101 @@
+<resources>
+    <string name="app_name">Let\'s Bone</string>
+    <string name="logo_name">Let\'s Bone</string>
+    <string name="version">Ver 00.01.01</string>
+    <string name="splash_copyright">COPYRIGHT 2019 CSIS4175, ALL RIGHTS RESERVED</string>
+
+    <!--BAR-->
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Bone Management</string>
+    <string name="nav_header_subtitle">User003 / danielahn@douglas.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!--COMMON-->
+    <string name="dollar">$</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="apply">Apply</string>
+    <string name="error">Error</string>
+    <string name="date">Date</string>
+    <string name="error_invalid">Invalid input</string>
+    <string name="error_range">Out of range</string>
+    <string name="delete">Delete</string>
+    <string name="save">Save</string>
+    <string name="submit">Submit</string>
+    <string name="deselect_all">Deselect All</string>
+    <string name="select_all">Select All</string>
+    <string name="dashboard">Dashboard</string>
+
+    <!-- Strings related to login -->
+    <string name="sign_up">Sign up</string>
+    <string name="login_title">Enter your information to register.</string>
+    <string name="login_edit_title">Enter your information to edit.</string>
+    <string name="login_necessity"> * is required.</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+    <string name="hint_fname">Daniel</string>
+    <string name="hint_lname">Ahn</string>
+    <string name="hint_pwd">8 characters</string>
+    <string name="hint_phone">123-456-7890</string>
+    <string name="hint_email">dan@douglas.com</string>
+
+    <string name="login_dialog_text">No information or invalid input. Do you want to create a user?</string>
+    <string name="user_profile">User Profile</string>
+    <string name="user_reg">Register User Profile</string>
+    <string name="user_id">UserID</string>
+    <string name="first_name">First Name*</string>
+    <string name="last_name">Last Name</string>
+    <string name="password">Password</string>
+    <string name="input_password">Password*</string>
+    <string name="confirm_password">Confirm Password*</string>
+    <string name="phone_number">Phone Number*</string>
+    <string name="email">E-mail</string>
+    <string name="input_email">E-mail address*</string>
+    <string name="income">Monthly Income</string>
+    <string name="input_income">Monthly Income*</string>
+    <string name="last_updated">Last updated on </string>
+    <string name="register">Register</string>
+    <string name="sign_out">Sign-out</string>
+
+    <!--Main content-->
+    <string name="main_menu">Main Menu</string>
+
+    <!--settings-->
+    <string name="settings_sign_out">Sign-out</string>
+    <string name="settings_delete_user">Delete Current User</string>
+    <string name="settings_reset">Reset Database</string>
+    <string name="settings_quit">Exit</string>
+
+
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <!--<string name="hello_blank_fragment">Hello blank fragment</string>-->
+
+    <!--<string name="action_settings">Settings</string>-->
+    <string name="send">SEND</string>
+    <string name="action_send">Send</string>
+    <string name="prompt_message">Message</string>
+    <string name="action_attach">ATTACH</string>
+    <string name="action_capture">CAPTURE IMAGE</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
