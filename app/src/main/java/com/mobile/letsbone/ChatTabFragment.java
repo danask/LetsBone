@@ -54,7 +54,7 @@ public class ChatTabFragment extends Fragment {
     private String mParam2;
     private EditText mInputMessageView;
     private RecyclerView mMessagesView;
-    private ChatFragment.OnFragmentInteractionListener mListener;
+    private ChatTabFragment.OnFragmentInteractionListener mListener;
     private List<Message> mMessages = new ArrayList<Message>();
     private RecyclerView.Adapter mAdapter;
 
@@ -76,11 +76,11 @@ public class ChatTabFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ChatFragment.
+     * @return A new instance of fragment ChatTabFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ChatFragment newInstance(String param1, String param2) {
-        ChatFragment fragment = new ChatFragment();
+    public static ChatTabFragment newInstance(String param1, String param2) {
+        ChatTabFragment fragment = new ChatTabFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -88,7 +88,7 @@ public class ChatTabFragment extends Fragment {
         return fragment;
     }
 
-//    public ChatFragment() {
+//    public ChatTabFragment() {
 //        // Required empty public constructor
 //    }
 
@@ -177,16 +177,16 @@ public class ChatTabFragment extends Fragment {
 
     public void sendImage(String path)
     {
-        JSONObject sendData = new JSONObject();
-        verifyStoragePermissions(getActivity());
-        try{
-            sendData.put("image", encodeImage(path));
-            Bitmap bmp = decodeImage(sendData.getString("image"));
-            addImage(bmp);
-            socket.emit("message",sendData);
-        }catch(JSONException e){
-
-        }
+//        JSONObject sendData = new JSONObject();
+//        verifyStoragePermissions(getActivity());
+//        try{
+//            sendData.put("image", encodeImage(path));
+//            Bitmap bmp = decodeImage(sendData.getString("image"));
+//            addImage(bmp);
+//            socket.emit("message",sendData);
+//        }catch(JSONException e){
+//
+//        }
     }
 
     private void addMessage(String message) {
@@ -200,41 +200,42 @@ public class ChatTabFragment extends Fragment {
     }
 
     private void addImage(Bitmap bmp){
-        mMessages.add(new Message.Builder(Message.TYPE_MESSAGE)
-                .image(bmp).build());
-        mAdapter = new MessageAdapter( mMessages);
-        mAdapter.notifyItemInserted(0);
-        scrollToBottom();
+//        mMessages.add(new Message.Builder(Message.TYPE_MESSAGE)
+//                .image(bmp).build());
+//        mAdapter = new MessageAdapter( mMessages);
+//        mAdapter.notifyItemInserted(0);
+//        scrollToBottom();
     }
-    private void scrollToBottom() {
+    private void scrollToBottom()
+    {
         mMessagesView.scrollToPosition(mAdapter.getItemCount() - 1);
     }
 
-    private String encodeImage(String path)
-    {
-        File imagefile = new File(path);
-        FileInputStream fis = null;
-        try{
-            fis = new FileInputStream(imagefile);
-        }catch(FileNotFoundException e){
-            e.printStackTrace();
-        }
-        Bitmap bm = BitmapFactory.decodeStream(fis);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG,100,baos);
-        byte[] b = baos.toByteArray();
-        String encImage = Base64.encodeToString(b, Base64.DEFAULT);
-        //Base64.de
-        return encImage;
+//    private String encodeImage(String path)
+//    {
+//        File imagefile = new File(path);
+//        FileInputStream fis = null;
+//        try{
+//            fis = new FileInputStream(imagefile);
+//        }catch(FileNotFoundException e){
+//            e.printStackTrace();
+//        }
+//        Bitmap bm = BitmapFactory.decodeStream(fis);
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        bm.compress(Bitmap.CompressFormat.JPEG,100,baos);
+//        byte[] b = baos.toByteArray();
+//        String encImage = Base64.encodeToString(b, Base64.DEFAULT);
+//        //Base64.de
+//        return encImage;
 
-    }
+//    }
 
-    private Bitmap decodeImage(String data)
-    {
-        byte[] b = Base64.decode(data,Base64.DEFAULT);
-        Bitmap bmp = BitmapFactory.decodeByteArray(b,0,b.length);
-        return bmp;
-    }
+//    private Bitmap decodeImage(String data)
+//    {
+//        byte[] b = Base64.decode(data,Base64.DEFAULT);
+//        Bitmap bmp = BitmapFactory.decodeByteArray(b,0,b.length);
+//        return bmp;
+//    }
 
     private Emitter.Listener handleIncomingMessages = new Emitter.Listener(){
         @Override
@@ -252,12 +253,12 @@ public class ChatTabFragment extends Fragment {
                     } catch (JSONException e) {
                         // return;
                     }
-                    try {
-                        imageText = data.getString("image");
-                        addImage(decodeImage(imageText));
-                    } catch (JSONException e) {
-                        //retur
-                    }
+//                    try {
+//                        imageText = data.getString("image");
+//                        addImage(decodeImage(imageText));
+//                    } catch (JSONException e) {
+//                        //retur
+//                    }
 
                 }
             });

@@ -107,7 +107,7 @@ public class SocketFragment extends Fragment {
         if(fragment != null)
         {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.chatFragment_containter, fragment);
+            ft.replace(R.id.ChatTabFragment_containter, fragment);
             ft.commit();
 
             return true;
