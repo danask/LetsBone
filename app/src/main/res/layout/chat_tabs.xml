@@ -54,7 +54,7 @@
     <!--android:background="?android:attr/windowBackground"-->
 
     <FrameLayout
-        android:id="@+id/chatFragment_containter"
+        android:id="@+id/ChatTabFragment_containter"
         android:layout_width="match_parent"
         android:layout_height="505dp"
         android:layout_alignParentTop="true"
