@@ -9,7 +9,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Bone Management</string>
-    <string name="nav_header_subtitle">User003 / danielahn@douglas.com</string>
+    <string name="nav_header_subtitle">User003 / dan@douglas.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_login">Sign in</string>
@@ -65,8 +65,8 @@
     <string name="phone_number">Phone Number*</string>
     <string name="email">E-mail</string>
     <string name="input_email">E-mail address*</string>
-    <string name="income">Monthly Income</string>
-    <string name="input_income">Monthly Income*</string>
+    <string name="gender">Gender</string>
+    <string name="input_gender">Gender*</string>
     <string name="last_updated">Last updated on </string>
     <string name="register">Register</string>
     <string name="sign_out">Sign-out</string>
@@ -97,5 +97,22 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+
+    <!-- widget -->
+    <!-- Heading for the app widget ID panel. -->
+    <string name="widget_id_label">Current Chat Count</string>
+
+    <!-- Heading for the updated panel. -->
+    <string name="widget_update_label">Last updated</string>
+
+    <!-- Button label for the update button. -->
+    <string name="widget_button_update">Update now</string>
+
+    <!-- Format string for the date & count text view -->
+    <string name="date_count_format">%1$d times at %2$s</string>
+    <string name="appwidget_text">Chat Message</string>
+    <string name="add_widget">Add Letsbone Widget</string>
 
 </resources>

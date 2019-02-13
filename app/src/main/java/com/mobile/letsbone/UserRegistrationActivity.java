@@ -37,7 +37,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
     final String FNAME = "first name";
     final String LNAME = "last name";
     final String PWD = "password";
-    final String INCOME = "income";
+    final String GENDER = "gender";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
         final EditText editTextCPwd = (EditText)findViewById(R.id.editTextCPwd);
         final EditText editTextPhoneNumber = (EditText)findViewById(R.id.editTextPhoneNumber);
         final EditText editTextEmail = (EditText)findViewById(R.id.editTextEmail);
-        final EditText editTextIncome = (EditText)findViewById(R.id.editTextIncome);
+        final EditText editTextGender = (EditText)findViewById(R.id.editTextGender);
 
         final TextView textViewLastUpdated = (TextView)findViewById(R.id.textViewLastUpdated);
         Button regButton = (Button)findViewById(R.id.userRegButton);
@@ -65,7 +65,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
         // initialize
         final String formattedDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
         textViewLastUpdated.setText("Created on "+ formattedDate);
-        editTextIncome.setHint("Minimum $300");
+        editTextGender.setHint("M, F, or H");
 
         // Validation check
         editTextFName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -128,18 +128,18 @@ public class UserRegistrationActivity extends AppCompatActivity {
             }
         });
 
-        editTextIncome.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        editTextGender.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus)
             {
-                if (TextUtils.isEmpty(editTextIncome.getText()))
+                if (TextUtils.isEmpty(editTextGender.getText()))
                 {
-                    editTextIncome.setError(getString(R.string.error_field_required));
+                    editTextGender.setError(getString(R.string.error_field_required));
                 }
 
-                if (editTextIncome.getText().length() < 3)
+                if (editTextGender.getText().length() < 3)
                 {
-                    editTextIncome.setError(getString(R.string.error_range));
+                    editTextGender.setError(getString(R.string.error_range));
                 }
             }
         });
@@ -154,9 +154,9 @@ public class UserRegistrationActivity extends AppCompatActivity {
                 String userPwd = editTextPwd.getText().toString();
                 String userCPwd = editTextCPwd.getText().toString();
                 String userPhone = editTextPhoneNumber.getText().toString();
-                String userIncome = editTextIncome.getText().toString();
+                String userGender = editTextGender.getText().toString();
 
-                if(!userEmail.isEmpty() && !userCPwd.isEmpty() && !userIncome.isEmpty())
+                if(!userEmail.isEmpty() && !userCPwd.isEmpty() && !userGender.isEmpty())
                 {
 //                    Cursor cursorUser = databaseHelper.getUserProfileByEmail(userEmail);
 //
@@ -216,7 +216,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
 //                    }
                 }
                 else {
-                    alertDialogPopUp(EMAIL + " or " +PWD  + " or " +INCOME);
+                    alertDialogPopUp(EMAIL + " or " +PWD  + " or " +GENDER);
                 }
             }
         });

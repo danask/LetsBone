@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.Button;
@@ -93,8 +94,8 @@ public class SignInActivity extends AppCompatActivity {
                     {
 //                        while(cursorUser.moveToNext())
                         {
-                            String userFName = "Douglas";
-                            String userLName = "College";
+                            String userFName = "Douglas";  // this should be deleted
+                            String userLName = "";
                             String arg = "0";
 
 
@@ -113,6 +114,9 @@ public class SignInActivity extends AppCompatActivity {
 
                         new CustomProgressWheel().execute();
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
+                        // noti service
+                        startSimpleService();
                     }
                     else
                     {
@@ -182,6 +186,7 @@ public class SignInActivity extends AppCompatActivity {
 
     }
 
+    // AsyncTask
     private class CustomProgressWheel extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -211,5 +216,12 @@ public class SignInActivity extends AppCompatActivity {
             }
             return null;
         }
+    }
+
+
+    public void startSimpleService() {
+        Intent intent = new Intent(this, NotificationService.class);
+        Log.w("NOTI", "----------------NotificationService---------------------");
+        startService(intent);  // from super
     }
 }

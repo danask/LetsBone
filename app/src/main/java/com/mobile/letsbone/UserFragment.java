@@ -43,7 +43,7 @@ public class UserFragment extends Fragment {
     final String FNAME = "first name";
     final String LNAME = "last name";
     final String PWD = "password";
-    final String INCOME = "income";
+    final String GENDER = "gender";
 
     private EditText editTextFName;
     private EditText editTextLName;
@@ -51,10 +51,10 @@ public class UserFragment extends Fragment {
     private EditText editTextCPwd;
     private EditText editTextPhoneNumber;
     private EditText editTextEmail;
-    private EditText editTextIncome;
+    private EditText editTextGender;
     private TextView textViewLastUpdated;
     private Button regButton;
-    String orgIncome ="";
+    String orgGender ="";
     String orgMonth = "";
 
     final String formattedDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
@@ -71,7 +71,7 @@ public class UserFragment extends Fragment {
         editTextCPwd = (EditText)view.findViewById(R.id.editTextCPwd);
         editTextPhoneNumber = (EditText)view.findViewById(R.id.editTextPhoneNumber);
         editTextEmail = (EditText)view.findViewById(R.id.editTextEmail);
-        editTextIncome = (EditText)view.findViewById(R.id.editTextIncome);
+        editTextGender = (EditText)view.findViewById(R.id.editTextGender);
         textViewLastUpdated = (TextView)view.findViewById(R.id.textViewLastUpdated);
 
         final TextView textViewLastUpdated = (TextView)view.findViewById(R.id.textViewLastUpdated);
@@ -88,7 +88,7 @@ public class UserFragment extends Fragment {
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String currentUser = sharedPref.getString("currentUser", "-");
         String currentAmount = sharedPref.getString("currentUserAmount", "-");
-        orgIncome = currentAmount;
+        orgGender = currentAmount;
         String firstName = "";
         String lastName = "";
         String phoneNumber = "";
@@ -128,7 +128,7 @@ public class UserFragment extends Fragment {
         editTextCPwd = (EditText)view.findViewById(R.id.editTextCPwd);
         editTextPhoneNumber = (EditText)view.findViewById(R.id.editTextPhoneNumber);
         editTextEmail = (EditText)view.findViewById(R.id.editTextEmail);
-        editTextIncome = (EditText)view.findViewById(R.id.editTextIncome);
+        editTextGender = (EditText)view.findViewById(R.id.editTextGender);
         textViewLastUpdated = (TextView)view.findViewById(R.id.textViewLastUpdated);
         regButton = (Button)view.findViewById(R.id.userRegButton);
 
@@ -193,18 +193,18 @@ public class UserFragment extends Fragment {
             }
         });
 
-        editTextIncome.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        editTextGender.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus)
             {
-                if (TextUtils.isEmpty(editTextIncome.getText()))
+                if (TextUtils.isEmpty(editTextGender.getText()))
                 {
-                    editTextIncome.setError(getString(R.string.error_field_required));
+                    editTextGender.setError(getString(R.string.error_field_required));
                 }
 
-                if (editTextIncome.getText().length() < 3)
+                if (editTextGender.getText().length() < 3)
                 {
-                    editTextIncome.setError(getString(R.string.error_range));
+                    editTextGender.setError(getString(R.string.error_range));
                 }
             }
         });
@@ -219,15 +219,15 @@ public class UserFragment extends Fragment {
                 String userPwd = editTextPwd.getText().toString();
                 String userCPwd = editTextCPwd.getText().toString();
                 String userPhone = editTextPhoneNumber.getText().toString();
-                String userIncome = editTextIncome.getText().toString();
+                String userGender = editTextGender.getText().toString();
 
-                if(!userEmail.isEmpty() && !userCPwd.isEmpty() && !userIncome.isEmpty()) {
+                if(!userEmail.isEmpty() && !userCPwd.isEmpty() && !userGender.isEmpty()) {
 
                     double userIncomeNumber = 0.0;
-                    userIncomeNumber = Double.parseDouble(userIncome);
+//                    userIncomeNumber = Double.parseDouble(userIncome);
 
-                    Log.d(TAG, userIncomeNumber + ", " + Double.parseDouble(orgIncome) + ", " +
-                            formattedDate.substring(0, 2) + ", " + orgMonth);
+//                    Log.d(TAG, userIncomeNumber + ", " + Double.parseDouble(orgIncome) + ", " +
+//                            formattedDate.substring(0, 2) + ", " + orgMonth);
 
                     if (userPwd.equalsIgnoreCase(userCPwd))
                     {
@@ -248,12 +248,6 @@ public class UserFragment extends Fragment {
                             alertDialogPopUp(PHONE_NUMBER);
                         }
 
-                        else if((userIncomeNumber != Double.parseDouble(orgIncome)) &&
-                                (formattedDate.substring(0, 2).equalsIgnoreCase(orgMonth)))
-                            alertDialogPopUp("trial in income. You can change this only on 1st of every month. Rollback the original");
-
-                        else if(userIncomeNumber < 300)
-                            alertDialogPopUp(INCOME);
 
                         else
                         {
@@ -275,7 +269,7 @@ public class UserFragment extends Fragment {
                     }
                 }
                 else {
-                    alertDialogPopUp(EMAIL + " or " +PWD  + " or " +INCOME);
+                    alertDialogPopUp(EMAIL + " or " +PWD  + " or " );
                 }
             }
         });

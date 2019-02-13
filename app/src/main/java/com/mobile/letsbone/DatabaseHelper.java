@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper
 {
     final static String DB_NAME = "LetsBone.db";
-    final static int DB_VER = 1;
+    final static int DB_VER = 2;
     final static String CHAT_LOG_TBL = "chatLogTable";
 
     // common
