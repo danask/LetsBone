@@ -3,7 +3,7 @@
     android:initialKeyguardLayout="@layout/new_info_widget"
     android:initialLayout="@layout/new_info_widget"
     android:minWidth="220dp"
-    android:minHeight="110dp"
+    android:minHeight="250dp"
     android:previewImage="@drawable/user1"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="86400000"

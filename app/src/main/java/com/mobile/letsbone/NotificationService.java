@@ -16,6 +16,8 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.Random;
+
 public class NotificationService extends Service {
 
     private static final int CHAT_NOTIFY = 0x1001;
@@ -27,7 +29,7 @@ public class NotificationService extends Service {
 
     private static final int NOTIFICATION_ID = 1;
     private static final String NOTIFICATION_CHANNEL_ID = "my_notification_channel";
-
+    private String signInUser  = "";
 
 
     public NotificationService() {
@@ -86,18 +88,49 @@ public class NotificationService extends Service {
             Log.w(DEBUG_TAG, "Redelivered or retrying service start: " + flags);
         }
 
-        // id
-        doServiceStart(intent, startId);
+        final Intent tempIntent = intent;
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        final String currentUser = sharedPref.getString("currentUser", "-");
 
-        return  Service.START_REDELIVER_INTENT;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                while (true)
+                {
+                    int id = new Random().nextInt(100);
+
+                    try {
+                        Thread.sleep(1000);
+
+                        // TODO: comparing with user came from Firebase
+//                        if(!signInUser.equals(currentUser))
+                            doServiceStart(tempIntent, id, currentUser);
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+
+//                    if(isRunning){
+//                        Log.i(TAG, "Service running");
+//                    }
+                }
+
+                //Stop service once it finishes its task (in 5sec)
+//                stopSelf(); // by itself
+            }
+        }).start();
+
+//        return Service.START_STICKY;
+        return Service.START_REDELIVER_INTENT;
     }
 
 
     // notification -> intent
-    public void doServiceStart(Intent intent, int startId)
+    public void doServiceStart(Intent intent, int id, String name)
     {
-        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String currentUser = sharedPref.getString("currentUser", "-");
+
 
         Intent toLaunch = new Intent(getApplicationContext(), MainActivity.class);
 
@@ -109,11 +142,12 @@ public class NotificationService extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 getApplicationContext(),NOTIFICATION_CHANNEL_ID);
 
+       // currently support for local user
         builder.setTicker("Chat User Tracking");
         builder.setSmallIcon(android.R.drawable.stat_notify_more);
         builder.setWhen(System.currentTimeMillis());
         builder.setContentTitle("Chat User Tracking");
-        builder.setContentText(currentUser + " signed in Lets Bone");
+        builder.setContentText(name + "-"+id + " signed in Lets Bone");
 
         builder.setContentIntent(intentBack);
         builder.setAutoCancel(true);

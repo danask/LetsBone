@@ -21,18 +21,58 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#f1604d"
+        android:background="@color/colorPrimary"
         android:padding="@dimen/widget_margin">
 
         <!-- Panel for Widget ID -->
         <LinearLayout
-            android:id="@+id/section_id"
+            android:id="@+id/section_title"
             style="@style/AppWidgetSection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/appwidget_title_label"
+                style="@style/AppWidgetLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/section_title"
+                android:layout_alignTop="@+id/section_title"
+                android:layout_alignEnd="@+id/section_title"
+                android:layout_alignBottom="@+id/section_title"
+                android:layout_weight="2"
+                android:text="@string/app_name"
+                android:textColor="@color/blueLightBackground" />
+
+            <!--<TextView-->
+            <!--android:id="@+id/appwidget_id"-->
+            <!--style="@style/AppWidgetText"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:gravity="end"-->
+            <!--android:text="XX" />-->
+        </LinearLayout>
+
+        <!-- Panel for Widget ID -->
+        <LinearLayout
+            android:id="@+id/section_id"
+            style="@style/AppWidgetSection"
+            android:layout_width="369dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/section_title"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="4dp"
+            android:layout_marginStart="4dp"
             android:orientation="horizontal">
 
             <TextView
@@ -57,11 +97,13 @@
         <LinearLayout
             android:id="@+id/section_update"
             style="@style/AppWidgetSection"
-            android:layout_width="match_parent"
+            android:layout_width="370dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/section_id"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
+            android:layout_margin="4dp"
+            android:layout_marginStart="4dp"
             android:orientation="vertical">
 
             <TextView
@@ -88,6 +130,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/section_update"
             android:layout_centerHorizontal="true"
-            android:text="@string/widget_button_update" />
+            android:layout_marginTop="5dp"
+            android:text="@string/widget_button_update"
+            android:visibility="invisible" />
     </RelativeLayout>
 </RelativeLayout>

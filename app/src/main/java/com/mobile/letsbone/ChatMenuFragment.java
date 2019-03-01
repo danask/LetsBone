@@ -88,7 +88,7 @@ public class ChatMenuFragment extends Fragment {
         BottomNavigationView navigation = (BottomNavigationView) view.findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        // initial fragment
+        // initial fragment: frag to frag with bundle
         Fragment fragment = new ChatTabFragment();
         Bundle args = new Bundle();
         args.putString("date", date);
@@ -98,6 +98,7 @@ public class ChatMenuFragment extends Fragment {
         editor.putString("currentFragment", "ChatTabFragment");
         editor.commit();
 
+        // Dynamic Fragment
         loadFragment(fragment);
 
         return view;
@@ -107,8 +108,9 @@ public class ChatMenuFragment extends Fragment {
     {
         if(fragment != null)
         {
+            // Dynamic Fragment
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.ChatTabFragment_containter, fragment);
+            ft.replace(R.id.ChatTabFragment_containter, fragment);  // on the frameLayout
             ft.commit();
 
             return true;

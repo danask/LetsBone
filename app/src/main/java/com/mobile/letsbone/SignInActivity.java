@@ -187,10 +187,11 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     // AsyncTask
-    private class CustomProgressWheel extends AsyncTask<Void, Void, Void> {
-
+    private class CustomProgressWheel extends AsyncTask<Void, Void, Void>
+    {
         @Override
-        protected void onPreExecute() {
+        protected void onPreExecute()
+        {
             super.onPreExecute();
             inAnimation = new AlphaAnimation(0f, 1f);
             inAnimation.setDuration(200);
@@ -199,8 +200,9 @@ public class SignInActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(Void value)
+        {
+            super.onPostExecute(value);
             outAnimation = new AlphaAnimation(1f, 0f);
             outAnimation.setDuration(200);
             progressBarHolder.setAnimation(outAnimation);
@@ -208,9 +210,11 @@ public class SignInActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                    TimeUnit.SECONDS.sleep(1);
+        protected Void doInBackground(Void... values)
+        {
+            try
+            {
+                TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -41,7 +41,10 @@ public class NewInfoWidget extends AppWidgetProvider {
         // Get the current time.
         String dateString = DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date());
 
-        views.setTextViewText(R.id.appwidget_id, String.valueOf(appWidgetId));  // this should be from # of chat
+        // TODO: People count from Firebase
+        int numOfPeople = 1;
+
+        views.setTextViewText(R.id.appwidget_id, String.valueOf(numOfPeople));  // this should be from # of chat
         views.setTextViewText(R.id.appwidget_update,
                                 context.getResources().getString(
                                                         R.string.date_count_format,
