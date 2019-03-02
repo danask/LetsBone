@@ -46,6 +46,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="auth_failed">Authentication error, Please enter a valid email and password or sign up</string>
 
     <string name="hint_fname">Daniel</string>
     <string name="hint_lname">Ahn</string>
@@ -70,6 +71,7 @@
     <string name="last_updated">Last updated on </string>
     <string name="register">Register</string>
     <string name="sign_out">Sign-out</string>
+
 
     <!--Main content-->
     <string name="main_menu">Main Menu</string>

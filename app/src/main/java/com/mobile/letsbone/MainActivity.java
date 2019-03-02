@@ -19,6 +19,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -26,6 +28,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private FirebaseAuth auth;
     DatabaseHelper databaseHelper;
     String date = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
 
@@ -36,9 +39,12 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        auth = FirebaseAuth.getInstance();
+
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String currentUser = sharedPref.getString("currentUser", "-");
-        String currentUserAmount = sharedPref.getString("currentUserAmount", "-");
+//        String currentUserName = sharedPref.getString("currentUserName", "-");
 
         // main menu
         databaseHelper = new DatabaseHelper(this);
@@ -60,7 +66,7 @@ public class MainActivity extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
 
         TextView navUsername = (TextView) headerView.findViewById(R.id.textViewNavUser);
-        String currentUserName = sharedPref.getString("currentUserName", "Douglas") + " / " +
+        String currentUserName = /*sharedPref.getString("currentUserName", "Douglas") + " / " +*/
                                 sharedPref.getString("currentUser", "dan@douglas.com");
         navUsername.setText(currentUserName);
 
@@ -125,7 +131,10 @@ public class MainActivity extends AppCompatActivity
         String currentUser = sharedPref.getString("currentUser", "-");
 
         if(id == R.id.actionSignOut)
+        {
+            auth.signOut();
             startActivity(new Intent(getApplicationContext(), SignInActivity.class));
+        }
 
         if(id == R.id.actionDelUser);
             // TODO from FB
