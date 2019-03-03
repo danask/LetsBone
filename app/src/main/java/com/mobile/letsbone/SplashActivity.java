@@ -30,16 +30,10 @@ public class SplashActivity extends AppCompatActivity {
 
         databaseHelper = new DatabaseHelper(this);
 
-        textViewVersion = (TextView)findViewById(R.id.textViewVersion);
-        textViewLogo = (TextView)findViewById(R.id.logoImage);
-        textViewTitle = (TextView)findViewById(R.id.textViewTitle);
         textViewSplashDesc = (TextView)findViewById(R.id.textViewSplashDesc);
-        imageView = (ImageView)findViewById(R.id.imageViewPig);
+        imageView = (ImageView)findViewById(R.id.letsbone_logo);
 
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.animation);
-        textViewTitle.startAnimation(animation);
-        textViewVersion.startAnimation(animation);
-        textViewLogo.startAnimation(animation);
         textViewSplashDesc.startAnimation(animation);
         imageView.startAnimation(animation);
 

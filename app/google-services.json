@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "35452237487-clbo6jsn3cv2hjr843fcf1k8nivif184.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mobile.letsbone",
+            "certificate_hash": "d06533a7c4ccd4ae854ff52062404dfa7709de08"
+          }
+        },
+        {
           "client_id": "35452237487-p4vml3a142n668tgceotasdckc0vv4ih.apps.googleusercontent.com",
           "client_type": 3
         }

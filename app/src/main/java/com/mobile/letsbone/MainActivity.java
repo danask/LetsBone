@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity
         switch (id)
         {
             case R.id.nav_match:
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                startActivity(new Intent(getApplicationContext(), CardSwipe.class));
                 break;
             case R.id.nav_friendsList:
                 // TODO
