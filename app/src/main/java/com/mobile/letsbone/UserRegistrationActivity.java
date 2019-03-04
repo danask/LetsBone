@@ -65,7 +65,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
         // initialize
         final String formattedDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
         textViewLastUpdated.setText("Created on "+ formattedDate);
-        editTextGender.setHint("M, F, or H");
+        //editTextGender.setHint("M, F, or H");
 
         // Validation check
         editTextFName.setOnFocusChangeListener(new View.OnFocusChangeListener() {

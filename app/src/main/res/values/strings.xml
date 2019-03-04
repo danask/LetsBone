@@ -53,6 +53,7 @@
     <string name="hint_pwd">8 characters</string>
     <string name="hint_phone">123-456-7890</string>
     <string name="hint_email">dan@douglas.com</string>
+    <string name="hint_gender">M, F or H</string>
 
     <string name="login_dialog_text">No information or invalid input. Do you want to create a user?</string>
     <string name="user_profile">User Profile</string>

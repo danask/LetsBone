@@ -270,9 +270,9 @@
                     android:id="@+id/editTextGender"
                     android:layout_width="190dp"
                     android:layout_height="match_parent"
+                    android:digits="MFH"
                     android:gravity="left"
-                    android:hint="@string/dollar"
-                    android:inputType="numberDecimal"
+                    android:hint="@string/hint_gender"
                     android:paddingRight="20sp" />
             </LinearLayout>
 
