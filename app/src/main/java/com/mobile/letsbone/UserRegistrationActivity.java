@@ -1,9 +1,13 @@
 package com.mobile.letsbone;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +16,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,6 +31,7 @@ import java.util.regex.Pattern;
 
 public class UserRegistrationActivity extends AppCompatActivity {
 
+    FirebaseAuth auth;
     DatabaseHelper databaseHelper;
 
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
@@ -39,6 +50,14 @@ public class UserRegistrationActivity extends AppCompatActivity {
     final String PWD = "password";
     final String GENDER = "gender";
 
+    EditText editTextFName;
+    EditText editTextLName;
+    EditText editTextPwd;
+    EditText editTextCPwd;
+    EditText editTextPhoneNumber;
+    EditText editTextEmail;
+    EditText editTextGender;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,22 +69,23 @@ public class UserRegistrationActivity extends AppCompatActivity {
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2476a6")));
 
-        final EditText editTextFName = (EditText)findViewById(R.id.editTextFName);
-        final EditText editTextLName = (EditText)findViewById(R.id.editTextLName);
-        final EditText editTextPwd = (EditText)findViewById(R.id.editTextPwd);
-        final EditText editTextCPwd = (EditText)findViewById(R.id.editTextCPwd);
-        final EditText editTextPhoneNumber = (EditText)findViewById(R.id.editTextPhoneNumber);
-        final EditText editTextEmail = (EditText)findViewById(R.id.editTextEmail);
-        final EditText editTextGender = (EditText)findViewById(R.id.editTextGender);
+        editTextFName = (EditText)findViewById(R.id.editTextFName);
+        editTextLName = (EditText)findViewById(R.id.editTextLName);
+        editTextPwd = (EditText)findViewById(R.id.editTextPwd);
+        editTextCPwd = (EditText)findViewById(R.id.editTextCPwd);
+        editTextPhoneNumber = (EditText)findViewById(R.id.editTextPhoneNumber);
+        editTextEmail = (EditText)findViewById(R.id.editTextEmail);
+        editTextGender = (EditText)findViewById(R.id.editTextGender);
 
         final TextView textViewLastUpdated = (TextView)findViewById(R.id.textViewLastUpdated);
         Button regButton = (Button)findViewById(R.id.userRegButton);
         databaseHelper = new DatabaseHelper(this);
+        auth = FirebaseAuth.getInstance();
 
         // initialize
         final String formattedDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
         textViewLastUpdated.setText("Created on "+ formattedDate);
-        //editTextGender.setHint("M, F, or H");
+        editTextGender.setHint("M, F, or H");
 
         // Validation check
         editTextFName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -156,8 +176,9 @@ public class UserRegistrationActivity extends AppCompatActivity {
                 String userPhone = editTextPhoneNumber.getText().toString();
                 String userGender = editTextGender.getText().toString();
 
-                if(!userEmail.isEmpty() && !userCPwd.isEmpty() && !userGender.isEmpty())
+                if(!userEmail.isEmpty() && !userPwd.isEmpty() && !userCPwd.isEmpty())
                 {
+                    submitForm();
 //                    Cursor cursorUser = databaseHelper.getUserProfileByEmail(userEmail);
 //
 //                    if (cursorUser.getCount() > 0)
@@ -166,8 +187,6 @@ public class UserRegistrationActivity extends AppCompatActivity {
 //                    }
 //                    else {
 //
-//                        double userIncomeNumber = 0.0;
-//                        userIncomeNumber = Double.parseDouble(userIncome);
 //
 //                        if (userPwd.equalsIgnoreCase(userCPwd))
 //                        {
@@ -223,6 +242,54 @@ public class UserRegistrationActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Validating form
+     */
+    private void submitForm()
+    {
+        final String email = editTextEmail.getText().toString().trim();
+        String password = editTextPwd.getText().toString().trim();
+
+        if(email.isEmpty()) {
+            return;
+        }
+        if(password.isEmpty()) {
+            return;
+        }
+//        editTextEmailSignIn.setErrorEnabled(false);
+//        editTextPwdSignIn.setErrorEnabled(false);
+
+        //authenticate user
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(UserRegistrationActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        if (!task.isSuccessful()) {
+                            // there was an error
+                            Toast.makeText(UserRegistrationActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+
+                        }
+                        else {
+                            // TODO: Go to login again or direct to home
+//                            SharedPreferences.Editor editor = sharedPref.edit();
+//
+//                            editor.putString("currentUser", email);
+//                            editor.putString("currentUserName", "-");
+//                            editor.putString("currentUserExtra", "-");
+//                            editor.commit();
+
+
+                            startActivity(new Intent(getApplicationContext(), SignInActivity.class));
+                            finish();
+
+                        }
+                    }
+                });
+        Toast.makeText(getApplicationContext(), "You are successfully Registered !!", Toast.LENGTH_SHORT).show();
+
+    }
+
 
     public static boolean isValid(String inputString, String type)
     {
@@ -256,7 +323,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(UserRegistrationActivity.this);
         builder.setTitle("Error");
-        builder.setIcon(R.drawable.ic_launcher_round);
+//        builder.setIcon(R.drawable.ic_launcher_round);
         builder.setMessage("Invalid " + type + " value. Please try again");
         builder.setCancelable(true);
 
@@ -271,5 +338,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
         AlertDialog alert = builder.create();
         alert.show();
     }
+
+
 
 }
