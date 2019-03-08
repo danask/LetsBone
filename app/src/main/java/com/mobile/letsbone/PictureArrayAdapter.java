@@ -41,13 +41,13 @@ public class PictureArrayAdapter  extends ArrayAdapter<ProfileData> {
         image.setImageResource(currentProfile.getmPhoto());
 
         TextView name = (TextView)listItem.findViewById(R.id.profileName);
-        name.setText(currentProfile.getmName());
+        name.setText(currentProfile.getfName() + " " + currentProfile.getlName());
 
         TextView location = (TextView)listItem.findViewById(R.id.profileLocation);
-        location.setText(currentProfile.getmLocation());
+        location.setText(currentProfile.getLocation());
 
         TextView age = (TextView)listItem.findViewById(R.id.profileAge);
-        location.setText(currentProfile.getmAge());
+        location.setText(currentProfile.getAge());
 
         return listItem;
     }

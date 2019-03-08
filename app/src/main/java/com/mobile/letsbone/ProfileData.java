@@ -2,49 +2,93 @@ package com.mobile.letsbone;
 
 public class ProfileData {
 
-    private String mName;
-    private String mAge;
-    private String mLocation;
+    private String fName;
+    private String lName;
+    private String gender;
+    private String age;
+    private String location;
+    private int numLikes;
     private int mPhoto;
+    private String lookingFor;
 
-    public ProfileData(String mName, String mAge, String mLocation, int mPhoto) {
-        this.mName = mName;
+    public ProfileData(String fName, String lName, String gender, String age, String location, int numLikes, int mPhoto, String lookingFor) {
+        this.fName = fName;
+        this.lName = lName;
+        this.gender = gender;
+        this.age = age;
+        this.location = location;
+        this.numLikes = numLikes;
         this.mPhoto = mPhoto;
-        this.mAge = mAge;
-        this.mLocation = mLocation;
+        this.lookingFor = lookingFor;
     }
 
     //Getters
 
-    public String getmName() {
-        return mName;
+    public String getfName() {
+        return fName;
     }
 
-    public String getmAge() {
-        return mAge;
+    public String getlName() {
+        return lName;
     }
 
-    public String getmLocation() {
-        return mLocation;
+    public String getGender() {
+        return gender;
     }
+
+    public String getAge() {
+        return age;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public int getNumLikes() {
+        return numLikes;
+    }
+
+    public String getLookingFor() {
+        return lookingFor;
+    }
+
+
+    //Setters
+
+    public void setfName(String fName) {
+        this.fName = fName;
+    }
+
+    public void setlName(String lName) {
+        this.lName = lName;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setNumLikes(int numLikes) {
+        this.numLikes = numLikes;
+    }
+
+    public void setLookingFor(String lookingFor) {
+        this.lookingFor = lookingFor;
+    }
+
+
 
     public int getmPhoto() {
         return mPhoto;
     }
 
-    //Setters
-
-    public void setmName(String mName) {
-        this.mName = mName;
-    }
-
-    public void setmAge(String mAge) {
-        this.mAge = mAge;
-    }
-
-    public void setmLocation(String mLocation) {
-        this.mLocation = mLocation;
-    }
 
 
     public void setmPhoto(int mPhoto) { this.mPhoto = mPhoto; }

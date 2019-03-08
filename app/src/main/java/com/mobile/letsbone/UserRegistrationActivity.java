@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,7 +57,12 @@ public class UserRegistrationActivity extends AppCompatActivity {
     EditText editTextCPwd;
     EditText editTextPhoneNumber;
     EditText editTextEmail;
-    EditText editTextGender;
+    //EditText editTextGender;
+    Spinner spinnerGender;
+    Spinner spinnerDogBreed;
+    Spinner spinnerDogGender;
+    Spinner spinnerDogAge;
+    EditText editTextDogBreed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +81,12 @@ public class UserRegistrationActivity extends AppCompatActivity {
         editTextCPwd = (EditText)findViewById(R.id.editTextCPwd);
         editTextPhoneNumber = (EditText)findViewById(R.id.editTextPhoneNumber);
         editTextEmail = (EditText)findViewById(R.id.editTextEmail);
-        editTextGender = (EditText)findViewById(R.id.editTextGender);
+        //editTextGender = (EditText)findViewById(R.id.editTextGender);
+        spinnerGender = (Spinner)findViewById(R.id.spinnerGender);
+        spinnerDogBreed = (Spinner)findViewById(R.id.spinnerDogBreed);
+        spinnerDogGender = (Spinner)findViewById(R.id.spinnerDogGender);
+        spinnerDogAge = (Spinner)findViewById(R.id.spinnerDogAge);
+        //editTextDogBreed = (EditText)findViewById(R.id.editTextDogBreed);
 
         final TextView textViewLastUpdated = (TextView)findViewById(R.id.textViewLastUpdated);
         Button regButton = (Button)findViewById(R.id.userRegButton);
@@ -85,7 +96,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
         // initialize
         final String formattedDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
         textViewLastUpdated.setText("Created on "+ formattedDate);
-        editTextGender.setHint("M, F, or H");
+        //editTextGender.setHint("M, F, or H");
 
         // Validation check
         editTextFName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -121,7 +132,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
             }
         });
 
-        editTextPhoneNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        /*editTextPhoneNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus)
             {
@@ -130,7 +141,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
                     editTextPhoneNumber.setError(getString(R.string.error_field_required));
                 }
             }
-        });
+        });*/
 
         editTextEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -148,7 +159,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
             }
         });
 
-        editTextGender.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        /*editTextGender.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus)
             {
@@ -162,7 +173,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
                     editTextGender.setError(getString(R.string.error_range));
                 }
             }
-        });
+        });*/
 
         regButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,7 +185,10 @@ public class UserRegistrationActivity extends AppCompatActivity {
                 String userPwd = editTextPwd.getText().toString();
                 String userCPwd = editTextCPwd.getText().toString();
                 String userPhone = editTextPhoneNumber.getText().toString();
-                String userGender = editTextGender.getText().toString();
+                String userGender = spinnerGender.getSelectedItem().toString();
+                String dogBreed = spinnerDogBreed.getSelectedItem().toString();
+                String dogGender = spinnerDogGender.getSelectedItem().toString();
+                String dogAge = spinnerDogAge.getSelectedItem().toString();
 
                 if(!userEmail.isEmpty() && !userPwd.isEmpty() && !userCPwd.isEmpty())
                 {

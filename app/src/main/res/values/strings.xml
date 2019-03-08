@@ -54,13 +54,18 @@
     <string name="hint_phone">123-456-7890</string>
     <string name="hint_email">dan@douglas.com</string>
     <string name="hint_gender">M, F or H</string>
+    <string name="hint_age">18</string>
+    <string name="hint_dogBreed">Labrador</string>
+    <string name="hint_dogGender">M</string>
+    <string name="hint_dogAge">4</string>
 
     <string name="login_dialog_text">No information or invalid input. Do you want to create a user?</string>
     <string name="user_profile">User Profile</string>
     <string name="user_reg">Register User Profile</string>
     <string name="user_id">UserID</string>
+    <string name="user_info">User Information</string>
     <string name="first_name">First Name*</string>
-    <string name="last_name">Last Name</string>
+    <string name="last_name">Last Name*</string>
     <string name="password">Password</string>
     <string name="input_password">Password*</string>
     <string name="confirm_password">Confirm Password*</string>
@@ -69,6 +74,50 @@
     <string name="input_email">E-mail address*</string>
     <string name="gender">Gender</string>
     <string name="input_gender">Gender*</string>
+    <string-array name="genderArray">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+    <string name="age">Age</string>
+    <string name="input_age">Age*</string>
+    <string name="dog_info">Dog Information</string>
+    <string name="dogBreed">Dog Breed</string>
+    <string-array name="dogBreedArray">
+        <item>Labrador Retriever</item>
+        <item>German Shepherd</item>
+        <item>Poodle</item>
+        <item>Chihuahua</item>
+        <item>Golden Retriever</item>
+        <item>Yorkshire Terrier</item>
+        <item>Dachshund</item>
+        <item>Beagle</item>
+        <item>Boxer</item>
+        <item>Miniature Schnauzer</item>
+        <item>Others</item>
+    </string-array>
+    <string name="input_dogBreed">Dog Breed</string>
+    <string name="dogGender">Dog Gender</string>
+    <string name="input_dogGender">Dog Gender</string>
+    <string-array name="dogGenderArray">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+    <string name="dogAge">Dog Age</string>
+    <string name="input_dogAge">Dog Age (Years)*</string>
+    <string-array name="dogAgeArray">
+        <item>Less than 1</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>More than 10</item>
+    </string-array>
     <string name="last_updated">Last updated on </string>
     <string name="register">Register</string>
     <string name="sign_out">Sign-out</string>
