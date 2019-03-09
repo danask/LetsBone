@@ -54,7 +54,7 @@
     <string name="hint_phone">123-456-7890</string>
     <string name="hint_email">dan@douglas.com</string>
     <string name="hint_gender">M, F or H</string>
-    <string name="hint_age">18</string>
+    <string name="hint_age">Pick Birth Date</string>
     <string name="hint_dogBreed">Labrador</string>
     <string name="hint_dogGender">M</string>
     <string name="hint_dogAge">4</string>

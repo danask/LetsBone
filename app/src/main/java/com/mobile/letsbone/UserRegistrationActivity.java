@@ -1,6 +1,7 @@
 package com.mobile.letsbone;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -25,6 +27,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -50,6 +53,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
     final String LNAME = "last name";
     final String PWD = "password";
     final String GENDER = "gender";
+    int userAge;
 
     EditText editTextFName;
     EditText editTextLName;
@@ -62,6 +66,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
     Spinner spinnerDogBreed;
     Spinner spinnerDogGender;
     Spinner spinnerDogAge;
+    Button btnBDatePicker;
     EditText editTextDogBreed;
 
     @Override
@@ -81,6 +86,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
         editTextCPwd = (EditText)findViewById(R.id.editTextCPwd);
         editTextPhoneNumber = (EditText)findViewById(R.id.editTextPhoneNumber);
         editTextEmail = (EditText)findViewById(R.id.editTextEmail);
+        btnBDatePicker = (Button)findViewById(R.id.btnBDatePicker);
         //editTextGender = (EditText)findViewById(R.id.editTextGender);
         spinnerGender = (Spinner)findViewById(R.id.spinnerGender);
         spinnerDogBreed = (Spinner)findViewById(R.id.spinnerDogBreed);
@@ -142,6 +148,20 @@ public class UserRegistrationActivity extends AppCompatActivity {
                 }
             }
         });*/
+
+        btnBDatePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Calendar calendar = Calendar.getInstance();
+                int bDateYear = calendar.get(Calendar.YEAR);
+                int bDateMonth = calendar.get(Calendar.MONTH);
+                int bDateDay = calendar.get(Calendar.DAY_OF_MONTH);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(view.getContext(), datePickerListener,
+                        bDateYear, bDateMonth, bDateDay);
+                datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
+                datePickerDialog.show();
+            }
+        });
 
         editTextEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -255,10 +275,37 @@ public class UserRegistrationActivity extends AppCompatActivity {
         });
     }
 
+    private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, day);
+            String dateFormat = new SimpleDateFormat("MMM dd YYYY").format(calendar.getTime());
+            Toast.makeText(getApplicationContext(), "Age: " + Integer.toString(calcAge(calendar.getTimeInMillis())), Toast.LENGTH_SHORT).show();
+        }
+    };
 
-    /**
-     * Validating form
-     */
+    int calcAge(long date) {
+        Calendar dob = Calendar.getInstance();
+        dob.setTimeInMillis(date);
+        Calendar dateToday = Calendar.getInstance();
+        userAge = dateToday.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+        if(dateToday.get(Calendar.DAY_OF_MONTH) < dob.get(Calendar.DAY_OF_MONTH)) {
+            userAge--;
+        }
+
+        return userAge;
+    }
+
+
+
+
+/**
+ * Validating form
+ */
     private void submitForm()
     {
         final String email = editTextEmail.getText().toString().trim();
