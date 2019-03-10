@@ -44,15 +44,15 @@ public class CardSwipe extends Fragment {
         //al.add(new ProfileData("Tyson", "19","Surrey, BC", R.drawable.dog4));
         //al.add(new ProfileData("Tyrone", "30","Vancouver, BC", R.drawable.dog5));
         al.add(new ProfileData("Bob", "Sura", "M", "25", "Vancouver, BC",
-                5, R.drawable.dog1, "F"));
+                5, R.drawable.dog6, "F"));
         al.add(new ProfileData("Joe", "Dumars", "M", "21", "Surrey, BC",
-                10, R.drawable.dog2, "F"));
+                10, R.drawable.dog6, "F"));
         al.add(new ProfileData("Buddy", "Hield", "M", "27", "Coquitlam, BC",
-                8, R.drawable.dog3, "F"));
+                8, R.drawable.dog6, "F"));
         al.add(new ProfileData("Blake", "Lively", "F", "27", "Burnaby, BC",
-                15, R.drawable.dog4, "M"));
+                15, R.drawable.dog6, "M"));
         al.add(new ProfileData("Anna", "Kendrick", "F", "26", "New Westminster, BC",
-                11, R.drawable.dog5, "M"));
+                11, R.drawable.dog6, "M"));
 
 
 

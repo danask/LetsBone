@@ -11,13 +11,23 @@
         android:layout_height="match_parent"
         android:background="@drawable/mountain_background">
 
-        <com.lorentzos.flingswipe.SwipeFlingAdapterView
-            android:id="@+id/cardFrame"
-            android:background="@drawable/gradient_background_teal"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:rotation_degrees="15.5"
-            tools:context=".MyActivity" />
+            android:background="@drawable/gradient_background_teal"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.lorentzos.flingswipe.SwipeFlingAdapterView
+                android:id="@+id/cardFrame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:rotation_degrees="15.5"
+                tools:context=".MyActivity" />
+
+
+        </LinearLayout>
+
 
 
     </LinearLayout>
