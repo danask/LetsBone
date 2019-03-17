@@ -33,6 +33,7 @@ public class CardSwipe extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
+        getActivity().setTitle("Match");
 
         //add the view via xml or programmatically
         SwipeFlingAdapterView flingContainer =(SwipeFlingAdapterView) getView().findViewById(R.id.cardFrame) ;

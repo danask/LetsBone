@@ -20,11 +20,13 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -66,7 +68,8 @@ public class ChatTabFragment extends Fragment {
         Log.d( "init socket", "----------------in------------");
 
         try{
-            socket = IO.socket("http://192.168.0.6:3000");
+//            socket = IO.socket("http://10.1.111.20:3000");
+            socket = IO.socket("http://99.79.62.21:3000");
         }catch(URISyntaxException e){
             throw new RuntimeException(e);
         }
@@ -161,12 +164,20 @@ public class ChatTabFragment extends Fragment {
         JSONObject sendText = new JSONObject();
         try{
             FirebaseDatabase database = FirebaseDatabase.getInstance();
+            FirebaseAuth auth = FirebaseAuth.getInstance();
 
             // key
             DatabaseReference myRef = database.getReference("Daniel");
 
             // value
             myRef.setValue(message);
+
+            //String temp = auth.getCurrentUser().getDisplayName();
+
+            //Toast.makeText(getContext(),  "==========="+ temp + "=======", Toast.LENGTH_LONG).show();;
+
+
+
 
             sendText.put("text",message);
             socket.emit("message", sendText);
@@ -178,16 +189,16 @@ public class ChatTabFragment extends Fragment {
 
     public void sendImage(String path)
     {
-//        JSONObject sendData = new JSONObject();
-//        verifyStoragePermissions(getActivity());
-//        try{
-//            sendData.put("image", encodeImage(path));
-//            Bitmap bmp = decodeImage(sendData.getString("image"));
-//            addImage(bmp);
-//            socket.emit("message",sendData);
-//        }catch(JSONException e){
-//
-//        }
+        JSONObject sendData = new JSONObject();
+        verifyStoragePermissions(getActivity());
+        try{
+            sendData.put("image", encodeImage(path));
+            Bitmap bmp = decodeImage(sendData.getString("image"));
+            addImage(bmp);
+            socket.emit("message",sendData);
+        }catch(JSONException e){
+
+        }
     }
 
     private void addMessage(String message) {
@@ -201,42 +212,42 @@ public class ChatTabFragment extends Fragment {
     }
 
     private void addImage(Bitmap bmp){
-//        mMessages.add(new Message.Builder(Message.TYPE_MESSAGE)
-//                .image(bmp).build());
-//        mAdapter = new MessageAdapter( mMessages);
-//        mAdapter.notifyItemInserted(0);
-//        scrollToBottom();
+        mMessages.add(new Message.Builder(Message.TYPE_MESSAGE)
+                .image(bmp).build());
+        mAdapter = new MessageAdapter( mMessages);
+        mAdapter.notifyItemInserted(0);
+        scrollToBottom();
     }
     private void scrollToBottom()
     {
         mMessagesView.scrollToPosition(mAdapter.getItemCount() - 1);
     }
 
-//    private String encodeImage(String path)
-//    {
-//        File imagefile = new File(path);
-//        FileInputStream fis = null;
-//        try{
-//            fis = new FileInputStream(imagefile);
-//        }catch(FileNotFoundException e){
-//            e.printStackTrace();
-//        }
-//        Bitmap bm = BitmapFactory.decodeStream(fis);
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        bm.compress(Bitmap.CompressFormat.JPEG,100,baos);
-//        byte[] b = baos.toByteArray();
-//        String encImage = Base64.encodeToString(b, Base64.DEFAULT);
-//        //Base64.de
-//        return encImage;
+    private String encodeImage(String path)
+    {
+        File imagefile = new File(path);
+        FileInputStream fis = null;
+        try{
+            fis = new FileInputStream(imagefile);
+        }catch(FileNotFoundException e){
+            e.printStackTrace();
+        }
+        Bitmap bm = BitmapFactory.decodeStream(fis);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG,100,baos);
+        byte[] b = baos.toByteArray();
+        String encImage = Base64.encodeToString(b, Base64.DEFAULT);
+        //Base64.de
+        return encImage;
 
-//    }
+    }
 
-//    private Bitmap decodeImage(String data)
-//    {
-//        byte[] b = Base64.decode(data,Base64.DEFAULT);
-//        Bitmap bmp = BitmapFactory.decodeByteArray(b,0,b.length);
-//        return bmp;
-//    }
+    private Bitmap decodeImage(String data)
+    {
+        byte[] b = Base64.decode(data,Base64.DEFAULT);
+        Bitmap bmp = BitmapFactory.decodeByteArray(b,0,b.length);
+        return bmp;
+    }
 
     private Emitter.Listener handleIncomingMessages = new Emitter.Listener(){
         @Override
@@ -254,12 +265,12 @@ public class ChatTabFragment extends Fragment {
                     } catch (JSONException e) {
                         // return;
                     }
-//                    try {
-//                        imageText = data.getString("image");
-//                        addImage(decodeImage(imageText));
-//                    } catch (JSONException e) {
-//                        //retur
-//                    }
+                    try {
+                        imageText = data.getString("image");
+                        addImage(decodeImage(imageText));
+                    } catch (JSONException e) {
+                        //retur
+                    }
 
                 }
             });
