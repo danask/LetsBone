@@ -46,7 +46,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="auth_failed">Authentication error, Please enter a valid email and password or sign up</string>
+    <string name="auth_failed"> Login failed. Please enter a valid email address and password.</string>
 
     <string name="hint_fname">Daniel</string>
     <string name="hint_lname">Ahn</string>
@@ -80,7 +80,13 @@
     </string-array>
     <string name="age">Age</string>
     <string name="input_age">Age*</string>
+    <string name="match_preference">Looking For*</string>
+    <string-array name="matchPreferenceArray">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
     <string name="dog_info">Dog Information</string>
+    <string name="dog_name">Dog Name</string>
     <string name="dogBreed">Dog Breed</string>
     <string-array name="dogBreedArray">
         <item>Labrador Retriever</item>

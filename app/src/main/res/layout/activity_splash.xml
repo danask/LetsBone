@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/letsbone_logo"
-            android:layout_width="300dp"
-            android:layout_height="100dp"
+            android:layout_width="298dp"
+            android:layout_height="80dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="200dp"
             android:src="@drawable/letsbone_logo" />
@@ -28,13 +28,15 @@
         android:id="@+id/textViewSplashDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/splash_copyright"
-        android:textColor="@android:color/background_light"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="15dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="36dp"
         android:gravity="center_horizontal"
+        android:text="@string/splash_copyright"
+        android:textColor="@android:color/background_light"
         android:textSize="12sp" />
 
 </RelativeLayout>

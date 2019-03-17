@@ -70,7 +70,7 @@
                 android:layout_marginBottom="0sp"
                 android:background="@drawable/blue_btn_bkg"
                 android:orientation="vertical"
-                android:padding="10sp">
+                android:padding="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -212,9 +212,31 @@
                     android:paddingRight="20sp" />-->
                 </LinearLayout>
 
-                <!--USER AGE-->
+                <!--MATCH PREFERENCE-->
                 <LinearLayout
-                    android:layout_width="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="170dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="16sp"
+                    android:text="@string/match_preference"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
+
+                    <Spinner
+                        android:id="@+id/spinnerMatchPreference"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:entries="@array/matchPreferenceArray" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="49dp"
                     android:orientation="horizontal">
 
@@ -229,7 +251,7 @@
 
                     <Button
                         android:id="@+id/btnBDatePicker"
-                        android:layout_width="wrap_content"
+                        android:layout_width="168dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/hint_age" />
@@ -258,6 +280,8 @@
                         android:inputType="textEmailAddress"
                         android:paddingRight="20sp" />-->
                 </LinearLayout>
+
+
 
                 <!--USER PASSWORD-->
                 <LinearLayout
@@ -315,6 +339,30 @@
                     android:layout_gravity="center_horizontal"
                     android:text="@string/dog_info"
                     android:textSize="25dp" />
+
+                <!--DOG NAME-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="170dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="16sp"
+                        android:text="@string/dog_name"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/editTextDogName"
+                        android:layout_width="190dp"
+                        android:layout_height="match_parent"
+                        android:gravity="left"
+                        android:hint="@string/hint_fname"
+                        android:paddingRight="20sp" />
+                </LinearLayout>
 
                 <!--DOG BREED-->
                 <LinearLayout
