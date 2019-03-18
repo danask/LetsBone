@@ -100,7 +100,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="60dp">
 
-                        <EditText
+                        <com.mobile.letsbone.EditTextWithClear
                             android:id="@+id/editTextEmailSignIn"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -110,6 +110,7 @@
                             android:layout_marginRight="10dp"
                             android:textSize="16dp"
                             android:inputType="textEmailAddress"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
                             android:background="@android:color/transparent" />
                     </LinearLayout>
 
@@ -124,12 +125,13 @@
                         android:layout_width="fill_parent"
                         android:layout_height="60dp">
 
-                        <EditText
+                        <com.mobile.letsbone.EditTextWithClear
                             android:id="@+id/editTextPwdSignIn"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
                             android:background="@android:color/transparent"
                             android:ems="10"
                             android:hint="@string/password"
