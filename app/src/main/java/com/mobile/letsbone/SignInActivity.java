@@ -70,27 +70,27 @@ public class SignInActivity extends AppCompatActivity {
         progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
         databaseHelper = new DatabaseHelper(this);
 
-        editTextEmailSignIn.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus)
-            {
-                if (TextUtils.isEmpty(editTextEmailSignIn.getText()))
-                {
-                    editTextEmailSignIn.setError(getString(R.string.error_field_required));
-                }
-            }
-        });
-
-        editTextPwdSignIn.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus)
-            {
-                if (TextUtils.isEmpty(editTextPwdSignIn.getText()))
-                {
-                    editTextPwdSignIn.setError(getString(R.string.error_field_required));
-                }
-            }
-        });
+//        editTextEmailSignIn.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus)
+//            {
+//                if (TextUtils.isEmpty(editTextEmailSignIn.getText()))
+//                {
+//                    editTextEmailSignIn.setError(getString(R.string.error_field_required));
+//                }
+//            }
+//        });
+//
+//        editTextPwdSignIn.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus)
+//            {
+//                if (TextUtils.isEmpty(editTextPwdSignIn.getText()))
+//                {
+//                    editTextPwdSignIn.setError(getString(R.string.error_field_required));
+//                }
+//            }
+//        });
 
 
         buttonSignIn.setOnClickListener(new View.OnClickListener() {
