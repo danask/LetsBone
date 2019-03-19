@@ -3,11 +3,13 @@ package com.mobile.letsbone;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -61,7 +63,6 @@ public class ChatTabFragment extends Fragment {
     private List<Message> mMessages = new ArrayList<Message>();
     private RecyclerView.Adapter mAdapter;
 
-
     private Socket socket;
     {
 
@@ -100,7 +101,6 @@ public class ChatTabFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
         setHasOptionsMenu(true);
         socket.connect();
         Log.d( "connected socket", "----------------conn------------");
@@ -126,7 +126,7 @@ public class ChatTabFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mAdapter = new MessageAdapter( mMessages);
+        mAdapter = new MessageAdapter(mMessages);
         /*try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
@@ -157,10 +157,14 @@ public class ChatTabFragment extends Fragment {
 
     }
 
+    // SEND
     private void sendMessage(){
         String message = mInputMessageView.getText().toString().trim();
         mInputMessageView.setText("");
-        addMessage(message);
+
+        if(!message.equals(""))
+            addMessage("S"+ message, 1);
+
         JSONObject sendText = new JSONObject();
         try{
             FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -175,7 +179,6 @@ public class ChatTabFragment extends Fragment {
             //String temp = auth.getCurrentUser().getDisplayName();
 
             //Toast.makeText(getContext(),  "==========="+ temp + "=======", Toast.LENGTH_LONG).show();;
-
 
 
 
@@ -201,12 +204,13 @@ public class ChatTabFragment extends Fragment {
         }
     }
 
-    private void addMessage(String message) {
+    private void addMessage(String message, int sendType) {
 
-        mMessages.add(new Message.Builder(Message.TYPE_MESSAGE)
-                .message(message).build());
+       // Toast.makeText(getContext(), "message : "+ sendType, Toast.LENGTH_SHORT).show();
+
+        mMessages.add(new Message.Builder(Message.TYPE_MESSAGE).message(message).build());
         // mAdapter = new MessageAdapter(mMessages);
-        mAdapter = new MessageAdapter( mMessages);
+        mAdapter = new MessageAdapter(mMessages);
         mAdapter.notifyItemInserted(0);
         scrollToBottom();
     }
@@ -214,7 +218,7 @@ public class ChatTabFragment extends Fragment {
     private void addImage(Bitmap bmp){
         mMessages.add(new Message.Builder(Message.TYPE_MESSAGE)
                 .image(bmp).build());
-        mAdapter = new MessageAdapter( mMessages);
+        mAdapter = new MessageAdapter(mMessages);
         mAdapter.notifyItemInserted(0);
         scrollToBottom();
     }
@@ -249,6 +253,7 @@ public class ChatTabFragment extends Fragment {
         return bmp;
     }
 
+    // RECEIVE
     private Emitter.Listener handleIncomingMessages = new Emitter.Listener(){
         @Override
         public void call(final Object... args){
@@ -260,8 +265,9 @@ public class ChatTabFragment extends Fragment {
                     String imageText;
                     try {
                         message = data.getString("text").toString();
-                        addMessage(message);
 
+                        if(!message.equals(""))
+                            addMessage("R"+message, 0);
                     } catch (JSONException e) {
                         // return;
                     }
