@@ -1,25 +1,38 @@
 package com.mobile.letsbone;
 
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
     private List<Message> mMessages;
+    private int userType;
     private int[] mUsernameColors;
+    SharedPreferences sharedPref;
+
 
     public MessageAdapter(List<Message> messages) {
         mMessages = messages;
-        //  mUsernameColors = context.getResources().getIntArray(R.array.username_colors);
+//          mUsernameColors = context.getResources().getIntArray(R.array.username_colors);
     }
 
     @Override
@@ -43,8 +56,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(ViewHolder viewHolder, int position)
+    {
         Message message = mMessages.get(position);
+
+        Log.d("message : ", "=========onBindViewHolder:position======="+ position);
+        Log.d("message : ", "=========onBindViewHolder:Type======="+ userType);
         viewHolder.setMessage(message.getMessage());
         viewHolder.setImage(message.getImage());
     }
@@ -59,19 +76,46 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         return mMessages.get(position).getType();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder
+    {
         private ImageView mImageView;
-        private TextView mMessageView;
+        private TextView mMessageViewTheir;
+        private TextView mMessageViewBound;
+        private TextView mMessageViewMe;
+
         public ViewHolder(View itemView) {
             super(itemView);
             mImageView = (ImageView) itemView.findViewById(R.id.image);
-            mMessageView = (TextView) itemView.findViewById(R.id.message);
+            mMessageViewTheir = (TextView) itemView.findViewById(R.id.messageSender);
+//            mMessageViewBound = (TextView) itemView.findViewById(R.id.messageBoundary);
+            mMessageViewMe = (TextView) itemView.findViewById(R.id.messageMe);
         }
 
         public void setMessage(String message) {
-            if (null == mMessageView) return;
-            if(null == message) return;
-            mMessageView.setText(message);
+            if (mMessageViewTheir == null) return;
+            if (mMessageViewMe == null) return;
+
+//            Drawable image= (Drawable) getResources().getDrawable(R.drawable.my_message);
+            String formattedDate = new SimpleDateFormat("mm:ss:a", Locale.getDefault()).format(new Date());
+
+            if(message.substring(0,1).equals("R")) {
+
+                message = message.substring(1);
+                if(message.equals("")) return;
+                mMessageViewTheir.setVisibility(View.VISIBLE);
+                mMessageViewTheir.setText("" + message);
+                mMessageViewMe.setVisibility(View.INVISIBLE);
+                mMessageViewTheir.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            }
+            else
+            {
+                message = message.substring(1);
+                if(message.equals("")) return;
+                mMessageViewMe.setVisibility(View.VISIBLE);
+                mMessageViewMe.setText("" + message);
+                mMessageViewTheir.getLayoutParams().width = 800 - message.length()*20;
+                mMessageViewTheir.setVisibility(View.INVISIBLE);
+            }
         }
 
         public void setImage(Bitmap bmp){
