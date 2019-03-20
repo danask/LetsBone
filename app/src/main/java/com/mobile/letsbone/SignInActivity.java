@@ -70,27 +70,27 @@ public class SignInActivity extends AppCompatActivity {
         progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
         databaseHelper = new DatabaseHelper(this);
 
-        editTextEmailSignIn.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus)
-            {
-                if (TextUtils.isEmpty(editTextEmailSignIn.getText()))
-                {
-                    editTextEmailSignIn.setError(getString(R.string.error_field_required));
-                }
-            }
-        });
-
-        editTextPwdSignIn.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus)
-            {
-                if (TextUtils.isEmpty(editTextPwdSignIn.getText()))
-                {
-                    editTextPwdSignIn.setError(getString(R.string.error_field_required));
-                }
-            }
-        });
+//        editTextEmailSignIn.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus)
+//            {
+//                if (TextUtils.isEmpty(editTextEmailSignIn.getText()))
+//                {
+//                    editTextEmailSignIn.setError(getString(R.string.error_field_required));
+//                }
+//            }
+//        });
+//
+//        editTextPwdSignIn.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus)
+//            {
+//                if (TextUtils.isEmpty(editTextPwdSignIn.getText()))
+//                {
+//                    editTextPwdSignIn.setError(getString(R.string.error_field_required));
+//                }
+//            }
+//        });
 
 
         buttonSignIn.setOnClickListener(new View.OnClickListener() {
@@ -180,6 +180,16 @@ public class SignInActivity extends AppCompatActivity {
     private void submitForm() {
         final String email = editTextEmailSignIn.getText().toString().trim();
         String password = editTextPwdSignIn.getText().toString().trim();
+
+        if (TextUtils.isEmpty(editTextEmailSignIn.getText()))
+        {
+            editTextEmailSignIn.setError(getString(R.string.error_field_required));
+        }
+
+        if (TextUtils.isEmpty(editTextPwdSignIn.getText()))
+        {
+            editTextPwdSignIn.setError(getString(R.string.error_field_required));
+        }
 
         if(email.isEmpty()) {
             return;

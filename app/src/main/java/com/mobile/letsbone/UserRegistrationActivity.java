@@ -25,11 +25,18 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,6 +44,8 @@ public class UserRegistrationActivity extends AppCompatActivity {
 
     FirebaseAuth auth;
     DatabaseHelper databaseHelper;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
 
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
@@ -63,6 +72,8 @@ public class UserRegistrationActivity extends AppCompatActivity {
     EditText editTextEmail;
     //EditText editTextGender;
     Spinner spinnerGender;
+    Spinner spinnerMatchPreference;
+    EditText dogName;
     Spinner spinnerDogBreed;
     Spinner spinnerDogGender;
     Spinner spinnerDogAge;
@@ -75,10 +86,12 @@ public class UserRegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.user_activity_registration);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowHomeEnabled(true);
+        /*actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setLogo(R.mipmap.ic_launcher_round);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2476a6")));
+        actionBar.setLogo(R.drawable.letsbone_head);*/
+        actionBar.hide();
 
         editTextFName = (EditText)findViewById(R.id.editTextFName);
         editTextLName = (EditText)findViewById(R.id.editTextLName);
@@ -89,6 +102,8 @@ public class UserRegistrationActivity extends AppCompatActivity {
         btnBDatePicker = (Button)findViewById(R.id.btnBDatePicker);
         //editTextGender = (EditText)findViewById(R.id.editTextGender);
         spinnerGender = (Spinner)findViewById(R.id.spinnerGender);
+        spinnerMatchPreference = (Spinner)findViewById(R.id.spinnerMatchPreference);
+        dogName = (EditText)findViewById(R.id.editTextDogName);
         spinnerDogBreed = (Spinner)findViewById(R.id.spinnerDogBreed);
         spinnerDogGender = (Spinner)findViewById(R.id.spinnerDogGender);
         spinnerDogAge = (Spinner)findViewById(R.id.spinnerDogAge);
@@ -98,6 +113,24 @@ public class UserRegistrationActivity extends AppCompatActivity {
         Button regButton = (Button)findViewById(R.id.userRegButton);
         databaseHelper = new DatabaseHelper(this);
         auth = FirebaseAuth.getInstance();
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
+        firebaseDatabase.getReference("app_title").setValue("Let's Bone");
+
+        firebaseDatabase.getReference("app_title").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String appTitle = dataSnapshot.getValue(String.class);
+                getSupportActionBar().setTitle(appTitle);
+                Toast.makeText(getApplicationContext(), "App title updated.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         // initialize
         final String formattedDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
@@ -204,8 +237,8 @@ public class UserRegistrationActivity extends AppCompatActivity {
                 String userLName = editTextLName.getText().toString();
                 String userPwd = editTextPwd.getText().toString();
                 String userCPwd = editTextCPwd.getText().toString();
-                String userPhone = editTextPhoneNumber.getText().toString();
                 String userGender = spinnerGender.getSelectedItem().toString();
+                String lookingFor = spinnerMatchPreference.getSelectedItem().toString();
                 String dogBreed = spinnerDogBreed.getSelectedItem().toString();
                 String dogGender = spinnerDogGender.getSelectedItem().toString();
                 String dogAge = spinnerDogAge.getSelectedItem().toString();
@@ -296,14 +329,11 @@ public class UserRegistrationActivity extends AppCompatActivity {
         if(dateToday.get(Calendar.DAY_OF_MONTH) < dob.get(Calendar.DAY_OF_MONTH)) {
             userAge--;
         }
-
         return userAge;
     }
 
 
-
-
-/**
+    /**
  * Validating form
  */
     private void submitForm()
@@ -340,8 +370,22 @@ public class UserRegistrationActivity extends AppCompatActivity {
 //                            editor.putString("currentUserExtra", "-");
 //                            editor.commit();
 
+                            String userID = auth.getCurrentUser().getUid();
+                            databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
+                            Map userInfo = new HashMap<>();
+                            userInfo.put("FirstName", editTextFName.getText().toString());
+                            userInfo.put("LastName", editTextLName.getText().toString());
+                            userInfo.put("EmailAddress", editTextEmail.getText().toString());
+                            userInfo.put("Gender", spinnerGender.getSelectedItem().toString());
+                            userInfo.put("LookingFor", spinnerMatchPreference.getSelectedItem().toString());
+                            userInfo.put("Age", userAge);
+                            userInfo.put("DogName", dogName.getText().toString());
+                            userInfo.put("DogBreed", spinnerDogBreed.getSelectedItem().toString());
+                            userInfo.put("DogGender", spinnerDogGender.getSelectedItem().toString());
+                            userInfo.put("DogAge", spinnerDogAge.getSelectedItem().toString());
+                            databaseReference.updateChildren(userInfo);
 
-                            startActivity(new Intent(getApplicationContext(), SignInActivity.class));
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             finish();
 
                         }
