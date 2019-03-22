@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity
                 fragment = new CardSwipe();
                 break;
             case R.id.nav_friendsList:
-                // TODO
+                fragment = new UserListFragment();
                 break;
             case R.id.nav_chat:
 //                fragment = new ChatMenuFragment();

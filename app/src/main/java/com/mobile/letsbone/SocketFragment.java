@@ -54,24 +54,24 @@ public class SocketFragment extends Fragment {
 
             switch (item.getItemId()) {
 
-                case R.id.navigation_home:
+//                case R.id.navigation_image:
+//                    fragment = new ChatTabFragment();
+//                    currentFragmentName = "ChatTabFragment";
+//                    break;
+                case R.id.navigation_profile:
                     fragment = new ChatTabFragment();
                     currentFragmentName = "ChatTabFragment";
                     break;
-                case R.id.navigation_dashboard:
-                    fragment = new ChatTabFragment();
-                    currentFragmentName = "ChatTabFragment";
-                    break;
-                case R.id.navigation_notifications:
-                    fragment = new ChatTabFragment();
-                    currentFragmentName = "ChatTabFragment";
+                case R.id.navigation_leave:
+                    fragment = new UserListFragment();
+                    currentFragmentName = "UserListFragment";
                     break;
             }
 
             editor.putString("currentFragment", currentFragmentName);
             editor.commit();
 
-            return loadFragment(fragment);
+            return loadFragment(fragment, currentFragmentName);
         }
     };
 
@@ -97,17 +97,22 @@ public class SocketFragment extends Fragment {
         editor.putString("currentFragment", "ChatTabFragment");
         editor.commit();
 
-        loadFragment(fragment);
+        loadFragment(fragment, currentFragmentName);
 
         return view;
     }
 
-    private boolean loadFragment(Fragment fragment)
+    private boolean loadFragment(Fragment fragment, String fragmentType)
     {
         if(fragment != null)
         {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.ChatTabFragment_containter, fragment);
+
+            if(fragmentType.equals("UserListFragment"))
+                ft.replace(R.id.content_main, fragment);
+            else
+                ft.replace(R.id.ChatTabFragment_containter, fragment);
+
             ft.commit();
 
             return true;

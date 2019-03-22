@@ -2,24 +2,30 @@ package com.mobile.letsbone;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -44,6 +50,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 public class ChatTabFragment extends Fragment {
 
     DatabaseHelper databaseHelper;
@@ -62,6 +70,7 @@ public class ChatTabFragment extends Fragment {
     private ChatTabFragment.OnFragmentInteractionListener mListener;
     private List<Message> mMessages = new ArrayList<Message>();
     private RecyclerView.Adapter mAdapter;
+    String imgDecodableString;
 
     private Socket socket;
     {
@@ -98,10 +107,13 @@ public class ChatTabFragment extends Fragment {
 //    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
+
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         setHasOptionsMenu(true);
+
         socket.connect();
         Log.d( "connected socket", "----------------conn------------");
         socket.on("message", handleIncomingMessages);
@@ -144,6 +156,8 @@ public class ChatTabFragment extends Fragment {
         mMessagesView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mMessagesView.setAdapter(mAdapter);
 
+        // not working properly -> later
+//        ImageButton sendImageButton = (ImageButton) view.findViewById(R.id.select_image_gallery_button);
         ImageButton sendButton = (ImageButton) view.findViewById(R.id.send_button);
         mInputMessageView = (EditText) view.findViewById(R.id.message_input);
 
@@ -154,7 +168,27 @@ public class ChatTabFragment extends Fragment {
             }
         });
 
+        mInputMessageView.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+              // TODO Auto-generated method stub
+              if (keyCode==KeyEvent.KEYCODE_ENTER)
+              {
+                  if (mInputMessageView.getText().toString() != null
+                          && !mInputMessageView.getText().toString().isEmpty())
+                  {
+                      sendMessage();
+                  }
+              }
+                return true;
+            }
+        });
 
+//        sendImageButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openGallery();
+//            }
+//        });
     }
 
     // SEND
@@ -184,10 +218,55 @@ public class ChatTabFragment extends Fragment {
 
             sendText.put("text",message);
             socket.emit("message", sendText);
+
+            hideKeyboard(getActivity());
+
         }catch(JSONException e){
 
         }
 
+    }
+
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager inputManager = (InputMethodManager) activity
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        // check if no view has focus:
+        View currentFocusedView = activity.getCurrentFocus();
+        if (currentFocusedView != null) {
+            inputManager.hideSoftInputFromWindow(currentFocusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+
+    private void openGallery()
+    {
+        Intent galleryintent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryintent, 1);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode,int resultCode,Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK && null != data)
+        {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+            Cursor cursor = getContext().getContentResolver().
+                    query(selectedImage, filePathColumn, null, null, null);
+            // Move to first row
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            imgDecodableString = cursor.getString(columnIndex);
+            cursor.close();
+            //Log.d("onActivityResult",imgDecodableString);
+            ChatTabFragment fragment = (ChatTabFragment) getFragmentManager().findFragmentById(R.id.ChatTabFragment_containter);
+            fragment.sendImage(imgDecodableString);
+        }
     }
 
     public void sendImage(String path)
