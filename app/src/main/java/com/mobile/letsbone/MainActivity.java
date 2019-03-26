@@ -170,18 +170,24 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_chat:
 //                fragment = new ChatMenuFragment();
-                fragment = new SocketFragment();
+//                fragment = new SocketFragment();
+                startActivity(new Intent(getApplicationContext(), ChatBoxActivity.class));
                 break;
             case R.id.nav_user:
                 fragment = new UserFragment();
                 break;
 
-            case R.id.nav_settings_delete:
-                deleteAll(currentUser);
-                break;
+
+
             case R.id.nav_settings_reset:
-                deleteAllWithoutUser(currentUser);
+//                deleteAllWithoutUser(currentUser);
                 break;
+
+            case R.id.nav_settings_delete:
+//                deleteAll(currentUser);
+//                startActivity(new Intent(getApplicationContext(), ChatTabActivity.class));
+                break;
+
             default:
                 break;
         }

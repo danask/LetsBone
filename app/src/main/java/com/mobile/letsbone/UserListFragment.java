@@ -1,43 +1,48 @@
 package com.mobile.letsbone;
 
-import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 //import android.app.Fragment;
-import android.support.v4.app.Fragment;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserListFragment extends Fragment {
 
     private Context context;
     private ListCustomAdapter adapter;
     private ListView listView;
+    private static final String TAG = MainActivity.class.getSimpleName();
+
+    private DatabaseReference databaseReference;
+    private FirebaseDatabase firebaseDatabase;
+    private FirebaseAuth firebaseAuth;
+
+    private String userId;
+
+//    FirebaseDatabase database = FirebaseDatabase.getInstance();
+//    DatabaseReference myRef = database.getReference("message");
 
     ConstraintLayout myLayout;
     ArrayList<String> myList = new ArrayList<>(Arrays.asList(
@@ -74,6 +79,25 @@ public class UserListFragment extends Fragment {
         getActivity().setTitle("Friends List");
 
 
+        // Read from the database
+//        myRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                // This method is called once with the initial value and again
+//                // whenever data at this location is updated.
+//                String value = dataSnapshot.getValue(String.class);
+//                Log.d(TAG, "Value is: " + value);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError error) {
+//                // Failed to read value
+//                Log.w(TAG, "Failed to read value.", error.toException());
+//            }
+//        });
+
+
+
 //        loadListView(view);
 //        onClickEvent(view);
     }
@@ -87,8 +111,71 @@ public class UserListFragment extends Fragment {
 
         listView = (ListView) view.findViewById(R.id.list_view);  // list on list fragment
 
-        adapter = new ListCustomAdapter(myList, myImageList, myDirList);
-        listView.setAdapter(adapter);
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        final String currentUser = sharedPref.getString("currentUser", "-");
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+
+
+        // Temp for test
+//        String userID = firebaseAuth.getCurrentUser().getUid();
+//        databaseReference = FirebaseDatabase.getInstance().getReference().child("UserProfile").child(userID);
+//
+//        Map userInfo = new HashMap<>();
+//        userInfo.put("FirstName", "Jane");
+//        userInfo.put("LastName", "March");
+//        userInfo.put("EmailAddress", "jane@dc.com");
+//        userInfo.put("Gender", "Female");
+//        userInfo.put("LookingFor", "Female");
+//        userInfo.put("Age", 20);
+//        userInfo.put("DogName", "Jenny");
+//        userInfo.put("DogBreed", "BBB");
+//        userInfo.put("DogGender", "Male");
+//        userInfo.put("DogAge", "Less than 1");
+//        userInfo.put("Likes", 0);
+//        userInfo.put("Matches", "iG4CGgTASLSQvBZe9PA7wmj9xTF3");
+//        userInfo.put("Status", 1);
+//
+//        databaseReference.updateChildren(userInfo);
+
+
+
+        // get reference to 'users' node
+        databaseReference = firebaseDatabase.getReference("UserProfile");
+
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                UserProfile users = null;
+
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    users = child.getValue(UserProfile.class);
+                    userId = child.getKey();
+
+                    // Display newly updated name and email
+
+                    if(!users.getEmailAddress().equalsIgnoreCase(currentUser)) {
+                        myList.add(users.getFirstName() + " " + users.getLastName() + ", " + users.getEmailAddress());
+                        myImageList.add(R.drawable.dog3);
+                        myDirList.add("Looking for " + users.getLookingFor());
+                    }
+                }
+
+
+
+                adapter = new ListCustomAdapter(myList, myImageList, myDirList);
+                listView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -96,13 +183,24 @@ public class UserListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object listItem = listView.getItemAtPosition(position);
 
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.content_main, new SocketFragment());
-                ft.commit();
+//                FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                ft.replace(R.id.content_main, new SocketFragment());
+//                ft.commit();
+
+                listItem.getClass();
+
+
+                Intent i  = new Intent(getContext(),ChatBoxActivity.class);
+                //retreive nickname from textview and add it to intent extra
+                i.putExtra("NICKNAME", listItem.toString());
+
+                startActivity(i);
 
                 //Toast.makeText(getActivity(), "selected chat "+position, Toast.LENGTH_SHORT).show();
             }
         });
+
+
 
         return view;
     }

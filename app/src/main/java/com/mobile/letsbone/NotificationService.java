@@ -143,10 +143,10 @@ public class NotificationService extends Service {
                 getApplicationContext(),NOTIFICATION_CHANNEL_ID);
 
        // currently support for local user
-        builder.setTicker("Chat User Tracking");
+        builder.setTicker("Chat Users Tracking");
         builder.setSmallIcon(android.R.drawable.stat_notify_more);
         builder.setWhen(System.currentTimeMillis());
-        builder.setContentTitle("Chat User Tracking");
+        builder.setContentTitle("Chat Users Tracking");
         builder.setContentText(name + "-"+id + " signed in Lets Bone");
 
         builder.setContentIntent(intentBack);
