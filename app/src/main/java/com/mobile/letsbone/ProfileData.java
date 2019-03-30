@@ -1,7 +1,7 @@
 package com.mobile.letsbone;
 
 public class ProfileData {
-
+    private String userId;
     private String fName;
     private String lName;
     private String gender;
@@ -11,7 +11,8 @@ public class ProfileData {
     private int mPhoto;
     private String lookingFor;
 
-    public ProfileData(String fName, String lName, String gender, String age, String location, int numLikes, int mPhoto, String lookingFor) {
+    public ProfileData(String userId, String fName, String lName, String gender, String age, String location, int numLikes, int mPhoto, String lookingFor) {
+        this.userId = userId;
         this.fName = fName;
         this.lName = lName;
         this.gender = gender;
@@ -23,6 +24,7 @@ public class ProfileData {
     }
 
     //Getters
+    public String getUserId() {return userId;}
 
     public String getfName() {
         return fName;
@@ -54,6 +56,7 @@ public class ProfileData {
 
 
     //Setters
+    public void setUserId(String userId) {this.userId = userId;}
 
     public void setfName(String fName) {
         this.fName = fName;

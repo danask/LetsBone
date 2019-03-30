@@ -25,11 +25,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -59,15 +63,12 @@ public class UserRegistrationActivity extends AppCompatActivity {
     EditText editTextLName;
     EditText editTextPwd;
     EditText editTextCPwd;
-    EditText editTextPhoneNumber;
     EditText editTextEmail;
-    //EditText editTextGender;
     Spinner spinnerGender;
     Spinner spinnerDogBreed;
     Spinner spinnerDogGender;
     Spinner spinnerDogAge;
     Button btnBDatePicker;
-    EditText editTextDogBreed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,19 +81,17 @@ public class UserRegistrationActivity extends AppCompatActivity {
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2476a6")));
 
-        editTextFName = (EditText)findViewById(R.id.editTextFName);
-        editTextLName = (EditText)findViewById(R.id.editTextLName);
-        editTextPwd = (EditText)findViewById(R.id.editTextPwd);
-        editTextCPwd = (EditText)findViewById(R.id.editTextCPwd);
-        editTextPhoneNumber = (EditText)findViewById(R.id.editTextPhoneNumber);
-        editTextEmail = (EditText)findViewById(R.id.editTextEmail);
-        btnBDatePicker = (Button)findViewById(R.id.btnBDatePicker);
-        //editTextGender = (EditText)findViewById(R.id.editTextGender);
-        spinnerGender = (Spinner)findViewById(R.id.spinnerGender);
+        editTextFName   = (EditText)findViewById(R.id.editTextFName);
+        editTextLName   = (EditText)findViewById(R.id.editTextLName);
+        editTextPwd     = (EditText)findViewById(R.id.editTextPwd);
+        editTextCPwd    = (EditText)findViewById(R.id.editTextCPwd);
+        editTextEmail   = (EditText)findViewById(R.id.editTextEmail);
+        btnBDatePicker  = (Button)findViewById(R.id.btnBDatePicker);
+        spinnerGender   = (Spinner)findViewById(R.id.spinnerGender);
         spinnerDogBreed = (Spinner)findViewById(R.id.spinnerDogBreed);
+        spinnerDogAge   = (Spinner)findViewById(R.id.spinnerDogAge);
         spinnerDogGender = (Spinner)findViewById(R.id.spinnerDogGender);
-        spinnerDogAge = (Spinner)findViewById(R.id.spinnerDogAge);
-        //editTextDogBreed = (EditText)findViewById(R.id.editTextDogBreed);
+
 
         final TextView textViewLastUpdated = (TextView)findViewById(R.id.textViewLastUpdated);
         Button regButton = (Button)findViewById(R.id.userRegButton);
@@ -202,13 +201,12 @@ public class UserRegistrationActivity extends AppCompatActivity {
                 String userEmail = editTextEmail.getText().toString();
                 String userFName = editTextFName.getText().toString();
                 String userLName = editTextLName.getText().toString();
-                String userPwd = editTextPwd.getText().toString();
-                String userCPwd = editTextCPwd.getText().toString();
-                String userPhone = editTextPhoneNumber.getText().toString();
+                String userPwd   = editTextPwd.getText().toString();
+                String userCPwd  = editTextCPwd.getText().toString();
                 String userGender = spinnerGender.getSelectedItem().toString();
-                String dogBreed = spinnerDogBreed.getSelectedItem().toString();
-                String dogGender = spinnerDogGender.getSelectedItem().toString();
-                String dogAge = spinnerDogAge.getSelectedItem().toString();
+                String dogBreed   = spinnerDogBreed.getSelectedItem().toString();
+                String dogGender  = spinnerDogGender.getSelectedItem().toString();
+                String dogAge     = spinnerDogAge.getSelectedItem().toString();
 
                 if(!userEmail.isEmpty() && !userPwd.isEmpty() && !userCPwd.isEmpty())
                 {
@@ -269,7 +267,8 @@ public class UserRegistrationActivity extends AppCompatActivity {
 //                    }
                 }
                 else {
-                    alertDialogPopUp(EMAIL + " or " +PWD  + " or " +GENDER);
+                    //alertDialogPopUp(EMAIL + " or " +PWD  + " or " +GENDER);
+                    Toast.makeText(UserRegistrationActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -340,6 +339,14 @@ public class UserRegistrationActivity extends AppCompatActivity {
 //                            editor.putString("currentUserExtra", "-");
 //                            editor.commit();
 
+                            String userId = auth.getCurrentUser().getUid();
+                            DatabaseReference currentUser = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
+                            Map userInfo = new HashMap<>();
+                            userInfo.put("firstName", editTextFName.getText().toString());
+                            userInfo.put("lastName", editTextLName.getText().toString());
+                            userInfo.put("gender", spinnerGender.getSelectedItem().toString());
+                            userInfo.put("age", userAge);
+                            currentUser.updateChildren(userInfo);
 
                             startActivity(new Intent(getApplicationContext(), SignInActivity.class));
                             finish();

@@ -12,6 +12,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
@@ -21,6 +29,11 @@ public class CardSwipe extends Fragment {
     private ArrayAdapter<String> arrayAdapter;
     private PictureArrayAdapter mAdapter;
     private int i;
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference usersDb;
+    private String currentUserKey;
+    ArrayList<ProfileData> al;
 
     @Nullable
     @Override
@@ -33,16 +46,26 @@ public class CardSwipe extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
+        getActivity().setTitle("Match");
 
-        //add the view via xml or programmatically
-        SwipeFlingAdapterView flingContainer =(SwipeFlingAdapterView) getView().findViewById(R.id.cardFrame) ;
 
-        final ArrayList<ProfileData> al = new ArrayList<>();
+        mAuth = FirebaseAuth.getInstance();
+        usersDb = FirebaseDatabase.getInstance().getReference().child("Users");
+        currentUserKey = mAuth.getCurrentUser().getUid();
+
+
+        al = new ArrayList<>();
+
+        checkUserSex();
+
         //al.add(new ProfileData("Bob", "25","Vancouver, BC", R.drawable.dog1));
         //al.add(new ProfileData("Joe", "21","Surrey, BC", R.drawable.dog2));
         //al.add(new ProfileData("Buddy", "27","Coquitlam, BC", R.drawable.dog3));
         //al.add(new ProfileData("Tyson", "19","Surrey, BC", R.drawable.dog4));
         //al.add(new ProfileData("Tyrone", "30","Vancouver, BC", R.drawable.dog5));
+
+
+        /*
         al.add(new ProfileData("Bob", "Sura", "M", "25", "Vancouver, BC",
                 5, R.drawable.dog6, "F"));
         al.add(new ProfileData("Joe", "Dumars", "M", "21", "Surrey, BC",
@@ -54,12 +77,14 @@ public class CardSwipe extends Fragment {
         al.add(new ProfileData("Anna", "Kendrick", "F", "26", "New Westminster, BC",
                 11, R.drawable.dog6, "M"));
 
-
+        */
 
 
         //choose your favorite adapter
 
-        mAdapter = new PictureArrayAdapter(getActivity(), al);
+        mAdapter = new PictureArrayAdapter(getActivity(), R.layout.card_item, al);
+
+        SwipeFlingAdapterView flingContainer =(SwipeFlingAdapterView) getView().findViewById(R.id.cardFrame) ;
 
         //set the listener and the adapter
         flingContainer.setAdapter(mAdapter);
@@ -74,14 +99,17 @@ public class CardSwipe extends Fragment {
 
             @Override
             public void onLeftCardExit(Object dataObject) {
-                //Do something on the left!
-                //You also have access to the original object.
-                //If you want to use it just cast it (String) dataObject
+                ProfileData profileObject = (ProfileData)dataObject;
+                String userId = profileObject.getUserId();
+                usersDb.child(userId).child("Connections").child("Nah").child(currentUserKey).setValue(true);
                 Toast.makeText(getActivity(), "Dislike!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onRightCardExit(Object dataObject) {
+                ProfileData profileObject = (ProfileData) dataObject;
+                String userId = profileObject.getUserId();
+                usersDb.child(userId).child("Connections").child("Yee").child(currentUserKey).setValue(true);
                 Toast.makeText(getActivity(), "Like!", Toast.LENGTH_SHORT).show();
             }
 
@@ -108,4 +136,147 @@ public class CardSwipe extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
     }
+
+
+    private String usersGender;
+    private String oppositeUserSex;
+    public void checkUserSex(){
+        String userId = mAuth.getCurrentUser().getUid();
+        DatabaseReference user =  usersDb.child(userId);
+
+
+        user.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    if(dataSnapshot.child("Gender").getValue()!= null){
+                        usersGender = dataSnapshot.child("Gender").getValue().toString();
+                        switch (usersGender){
+                            case "Male":
+                                oppositeUserSex ="Female";
+                                break;
+                            case "Female":
+                                oppositeUserSex = "Male";
+                                break;
+                        }
+                    }
+
+                    getOppositeSexUsers();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        //DatabaseReference userDb =  FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
+        /*
+        userDb.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                String fName = dataSnapshot.child("FirstName").getValue().toString();
+
+                al.add(new ProfileData(fName, "Sura", "M", "25", "Vancouver, BC",
+                        5, R.drawable.dog6, "F"));
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        */
+        //DatabaseReference userDb = ref.child("")
+        /*
+        userDb.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    if(dataSnapshot.child("Gender").getValue() != null){
+
+                        userSex = dataSnapshot.child("Gender").getValue().toString();
+                        switch (userSex){
+                            case "Male":
+                                oppositeUserSex = "Female";
+                                break;
+                            case "Female":
+                                oppositeUserSex = "Male";
+                                break;
+                        }
+
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        */
+    }
+
+    public  void getOppositeSexUsers(){
+            usersDb.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                if(dataSnapshot.exists() && dataSnapshot.child("Gender").getValue().toString().equals(oppositeUserSex)){
+
+                    al.add(new ProfileData(dataSnapshot.getKey(),dataSnapshot.child("FirstName").getValue().toString(),
+                            dataSnapshot.child("LastName").getValue().toString(),dataSnapshot.child("Gender").getValue().toString(),
+                            dataSnapshot.child("Age").getValue().toString(),"New WestMinister", 11, R.drawable.dog6,"M"));
+
+                    mAdapter.notifyDataSetChanged();
+                }
+
+               /* if(dataSnapshot.child("Gender").getValue() != null){
+                    if(dataSnapshot.exists()&& !dataSnapshot.child("Matches").child("Nah").hasChild(currentUid)
+                    && !dataSnapshot.child("Matches").child("Yee").hasChild(currentUid)
+                            && dataSnapshot.child("Gender").getValue().toString().equals(oppositeUserSex)){
+                        String profileImageUrl = "default";
+
+                        if(!dataSnapshot.child("profileImageUrl").getValue().equals("default")){
+                            profileImageUrl = dataSnapshot.child("profileImageUrl").getValue().toString();
+                        }
+
+                        ProfileData profileData = new ProfileData(dataSnapshot.child("FirstName").getValue().toString(),
+                                dataSnapshot.child("LastName").getValue().toString(),dataSnapshot.child("Gender").getValue().toString(),
+                                dataSnapshot.child("Age").getValue().toString(),"New WestMinister", 11, R.drawable.dog6,"M");
+
+                        al.add(profileData);
+                        arrayAdapter.notifyDataSetChanged();
+
+                    }
+                }*/
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 }
