@@ -1,4 +1,4 @@
-package com.mobile.letsbone;
+package com.mobile.letsbone.Entities;
 
 public class CardData {
 

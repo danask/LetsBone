@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--#3F51B5#0099cc-->
-    <color name="colorPrimary">#c1f0ff</color>
+    <color name="colorPrimary">#487b89</color>
     <color name="colorPrimaryDark">#303f9f</color>
     <color name="colorAccent">#669baf</color>
 
@@ -9,6 +9,7 @@
     <color name="white">#ffffff</color>
     <color name="blueLight">#05C3F9</color>
     <color name="blueLightBackground">#f3fbff</color>
+    <color name="yourchatcolour">#c1f0ff</color>
     <!--#c5e6f2-->
     <color name="blueDart">#0691b8</color>
 

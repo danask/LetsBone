@@ -1,8 +1,7 @@
-package com.mobile.letsbone;
+package com.mobile.letsbone.Matches;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.media.Image;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,8 +12,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mobile.letsbone.Entities.ProfileData;
+import com.mobile.letsbone.R;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class PictureArrayAdapter  extends ArrayAdapter<ProfileData> {
 

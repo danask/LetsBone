@@ -12,7 +12,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.mobile.letsbone.FriendsList.UserListFragment;
+import com.mobile.letsbone.Matches.CardSwipe;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -166,7 +167,7 @@ public class MainActivity extends AppCompatActivity
                 fragment = new CardSwipe();
                 break;
             case R.id.nav_friendsList:
-                // TODO
+                fragment = new UserListFragment();
                 break;
             case R.id.nav_chat:
 //                fragment = new ChatMenuFragment();
