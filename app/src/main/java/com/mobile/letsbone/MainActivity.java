@@ -2,6 +2,9 @@ package com.mobile.letsbone;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
@@ -18,9 +21,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -31,6 +40,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth auth;
     DatabaseHelper databaseHelper;
     String date = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
+    String photoURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +48,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         auth = FirebaseAuth.getInstance();
 
@@ -83,10 +92,63 @@ public class MainActivity extends AppCompatActivity
         imageViewDrawer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                startActivity(new Intent(getApplicationContext(), PhotoUploadActivity.class));
             }
         });
+
+//        DownloadImageTask downloadImageTask = new DownloadImageTask();
+//        PhotoUploadActivity photoUploadActivity = new PhotoUploadActivity();
+//        photoURL = photoUploadActivity.getRandomUID();
+//        Toast.makeText(this, photoURL, Toast.LENGTH_SHORT).show();
+//        downloadImageTask.execute(new String[] { photoURL });
     }
+
+//    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+//
+//        @Override
+//        protected Bitmap doInBackground(String... strings) {
+//            Bitmap userPhotoBitmap = null;
+//            for (String string : strings) {
+//                userPhotoBitmap = downloadImage(photoURL);
+//            }
+//            return userPhotoBitmap;
+//        }
+//    }
+//
+//    private Bitmap downloadImage(String photoURL) {
+//        Bitmap bitmap = null;
+//        InputStream inputStream = null;
+//        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+//        bmOptions.inSampleSize = 1;
+//
+//        try {
+//            inputStream = getHttpConnection(photoURL);
+//            bitmap = BitmapFactory.decodeStream(inputStream, null, bmOptions);
+//            inputStream.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return bitmap;
+//    }
+//
+//    private InputStream getHttpConnection(String photoURL) throws IOException{
+//        InputStream inputStream = null;
+//        URL url = new URL(photoURL);
+//        URLConnection connection = url.openConnection();
+//
+//        try {
+//            HttpURLConnection httpURLConnection = (HttpURLConnection) connection;
+//            httpURLConnection.setRequestMethod("GET");
+//            httpURLConnection.connect();
+//
+//            if(httpURLConnection.getResponseCode() == httpURLConnection.HTTP_OK) {
+//                inputStream = httpURLConnection.getInputStream();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return inputStream;
+//    }
 
     @Override
     public void onBackPressed() {

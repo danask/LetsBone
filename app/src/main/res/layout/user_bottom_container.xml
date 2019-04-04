@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="horizontal"
-    android:padding="10sp">
+    android:padding="10sp" >
 
     <Button
         android:id="@+id/userRegButton"
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@drawable/blue_btn_bkg"
-        android:text="@string/apply"
+        android:text="@string/register"
         android:textColor="#fff"
         android:textSize="14sp"
         android:textStyle="bold" />

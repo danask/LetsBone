@@ -16,6 +16,7 @@
         android:roundIcon="@mipmap/letsbone_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".PhotoUploadActivity"></activity>
         <activity
             android:name=".SplashActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -53,7 +54,7 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".CardSwipe"></activity>
+        <activity android:name=".CardSwipe" />
     </application>
 
 </manifest>

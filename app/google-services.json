@@ -31,8 +31,20 @@
           }
         },
         {
-          "client_id": "35452237487-p4vml3a142n668tgceotasdckc0vv4ih.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "35452237487-fuc2b4smavm8in7t6jmn22e9d0bscs97.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mobile.letsbone",
+            "certificate_hash": "8388c0b16ec5ffbbf9bdffbf147ef18418e4c6b0"
+          }
+        },
+        {
+          "client_id": "35452237487-n54fvu4c2h548b60oob268vqmmatokjq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mobile.letsbone",
+            "certificate_hash": "9e54b74680b6f68577f51f7d9e0b1c3d0ec19b37"
+          }
         }
       ],
       "api_key": [
@@ -41,20 +53,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "35452237487-p4vml3a142n668tgceotasdckc0vv4ih.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

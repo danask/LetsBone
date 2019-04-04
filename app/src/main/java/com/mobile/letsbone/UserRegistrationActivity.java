@@ -56,29 +56,27 @@ public class UserRegistrationActivity extends AppCompatActivity {
     public static final Pattern VALID_PWD_REGEX =
             Pattern.compile("(?=.*[0-9])(?=.*[a-zA-Z])(?=\\S+$).{8,}");  //(?=.*[@#$%^&+=]) for easy input
 
-    final String EMAIL = "email";
-    final String PHONE_NUMBER = "phone number";
     final String FNAME = "first name";
     final String LNAME = "last name";
-    final String PWD = "password";
+    final String EMAIL = "email";
     final String GENDER = "gender";
+    final String PWD = "password";
     int userAge;
 
     EditText editTextFName;
     EditText editTextLName;
-    EditText editTextPwd;
-    EditText editTextCPwd;
-    EditText editTextPhoneNumber;
     EditText editTextEmail;
-    //EditText editTextGender;
     Spinner spinnerGender;
     Spinner spinnerMatchPreference;
+    Button btnBDatePicker;
+    Button btnPhotoPicker;
+    EditText editTextPwd;
+    EditText editTextCPwd;
     EditText dogName;
     Spinner spinnerDogBreed;
     Spinner spinnerDogGender;
     Spinner spinnerDogAge;
-    Button btnBDatePicker;
-    EditText editTextDogBreed;
+    Button regButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,20 +95,18 @@ public class UserRegistrationActivity extends AppCompatActivity {
         editTextLName = (EditText)findViewById(R.id.editTextLName);
         editTextPwd = (EditText)findViewById(R.id.editTextPwd);
         editTextCPwd = (EditText)findViewById(R.id.editTextCPwd);
-        editTextPhoneNumber = (EditText)findViewById(R.id.editTextPhoneNumber);
         editTextEmail = (EditText)findViewById(R.id.editTextEmail);
         btnBDatePicker = (Button)findViewById(R.id.btnBDatePicker);
-        //editTextGender = (EditText)findViewById(R.id.editTextGender);
+        btnPhotoPicker = (Button)findViewById(R.id.btnPhotoPicker);
         spinnerGender = (Spinner)findViewById(R.id.spinnerGender);
         spinnerMatchPreference = (Spinner)findViewById(R.id.spinnerMatchPreference);
         dogName = (EditText)findViewById(R.id.editTextDogName);
         spinnerDogBreed = (Spinner)findViewById(R.id.spinnerDogBreed);
         spinnerDogGender = (Spinner)findViewById(R.id.spinnerDogGender);
         spinnerDogAge = (Spinner)findViewById(R.id.spinnerDogAge);
-        //editTextDogBreed = (EditText)findViewById(R.id.editTextDogBreed);
 
         final TextView textViewLastUpdated = (TextView)findViewById(R.id.textViewLastUpdated);
-        Button regButton = (Button)findViewById(R.id.userRegButton);
+        regButton = (Button)findViewById(R.id.userRegButton);
         databaseHelper = new DatabaseHelper(this);
         auth = FirebaseAuth.getInstance();
 
@@ -137,50 +133,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
         textViewLastUpdated.setText("Created on "+ formattedDate);
         //editTextGender.setHint("M, F, or H");
 
-        // Validation check
-        editTextFName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus)
-            {
-                if (TextUtils.isEmpty(editTextFName.getText()))
-                {
-                    editTextFName.setError(getString(R.string.error_field_required));
-                }
-            }
-        });
 
-        editTextPwd.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus)
-            {
-                if (TextUtils.isEmpty(editTextPwd.getText()))
-                {
-                    editTextPwd.setError(getString(R.string.error_field_required));
-                }
-            }
-        });
-
-        editTextCPwd.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus)
-            {
-                if (TextUtils.isEmpty(editTextCPwd.getText()))
-                {
-                    editTextCPwd.setError(getString(R.string.error_field_required));
-                }
-            }
-        });
-
-        /*editTextPhoneNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus)
-            {
-                if (TextUtils.isEmpty(editTextPhoneNumber.getText()))
-                {
-                    editTextPhoneNumber.setError(getString(R.string.error_field_required));
-                }
-            }
-        });*/
 
         btnBDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,38 +148,6 @@ public class UserRegistrationActivity extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
-
-        editTextEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus)
-            {
-                if (TextUtils.isEmpty(editTextEmail.getText()))
-                {
-                    editTextEmail.setError(getString(R.string.error_field_required));
-                }
-
-                if (editTextEmail.getText().length() < 5)
-                {
-                    editTextEmail.setError(getString(R.string.error_range));
-                }
-            }
-        });
-
-        /*editTextGender.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus)
-            {
-                if (TextUtils.isEmpty(editTextGender.getText()))
-                {
-                    editTextGender.setError(getString(R.string.error_field_required));
-                }
-
-                if (editTextGender.getText().length() < 3)
-                {
-                    editTextGender.setError(getString(R.string.error_range));
-                }
-            }
-        });*/
 
         regButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -338,6 +259,76 @@ public class UserRegistrationActivity extends AppCompatActivity {
  */
     private void submitForm()
     {
+        // Validation check
+        editTextFName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus)
+            {
+                if (TextUtils.isEmpty(editTextFName.getText()))
+                {
+                    editTextFName.setError(getString(R.string.error_field_required));
+                }
+            }
+        });
+
+        editTextLName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (TextUtils.isEmpty(editTextLName.getText()))
+                {
+                    editTextLName.setError(getString(R.string.error_field_required));
+                }
+            }
+        });
+
+        editTextEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus)
+            {
+                if (TextUtils.isEmpty(editTextEmail.getText()))
+                {
+                    editTextEmail.setError(getString(R.string.error_field_required));
+                }
+
+                if (editTextEmail.getText().length() < 5)
+                {
+                    editTextEmail.setError(getString(R.string.error_range));
+                }
+            }
+        });
+
+        editTextPwd.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus)
+            {
+                if (TextUtils.isEmpty(editTextPwd.getText()))
+                {
+                    editTextPwd.setError(getString(R.string.error_field_required));
+                }
+            }
+        });
+
+        editTextCPwd.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus)
+            {
+                if (TextUtils.isEmpty(editTextCPwd.getText()))
+                {
+                    editTextCPwd.setError(getString(R.string.error_field_required));
+                }
+            }
+        });
+
+        dogName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (TextUtils.isEmpty(dogName.getText()))
+                {
+                    dogName.setError(getString(R.string.error_field_required));
+                }
+            }
+        });
+
         final String email = editTextEmail.getText().toString().trim();
         String password = editTextPwd.getText().toString().trim();
 
@@ -359,7 +350,6 @@ public class UserRegistrationActivity extends AppCompatActivity {
                         if (!task.isSuccessful()) {
                             // there was an error
                             Toast.makeText(UserRegistrationActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
-
                         }
                         else {
                             // TODO: Go to login again or direct to home
@@ -383,11 +373,12 @@ public class UserRegistrationActivity extends AppCompatActivity {
                             userInfo.put("DogBreed", spinnerDogBreed.getSelectedItem().toString());
                             userInfo.put("DogGender", spinnerDogGender.getSelectedItem().toString());
                             userInfo.put("DogAge", spinnerDogAge.getSelectedItem().toString());
+                            userInfo.put("Likes", 0);
+                            userInfo.put("Status", 0);
+                            userInfo.put("Matches", "iG4CGgTASLSQvBZe9PA7wmj9xTF3");
                             databaseReference.updateChildren(userInfo);
 
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                            finish();
-
                         }
                     }
                 });
@@ -443,7 +434,4 @@ public class UserRegistrationActivity extends AppCompatActivity {
         AlertDialog alert = builder.create();
         alert.show();
     }
-
-
-
 }

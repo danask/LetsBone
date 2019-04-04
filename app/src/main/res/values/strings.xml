@@ -46,7 +46,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="auth_failed"> Login failed. Please enter a valid email address and password.</string>
+    <string name="auth_failed">Login failed. Please enter a valid email address and password.</string>
 
     <string name="hint_fname">Daniel</string>
     <string name="hint_lname">Ahn</string>
@@ -55,6 +55,7 @@
     <string name="hint_email">dan@douglas.com</string>
     <string name="hint_gender">M, F or H</string>
     <string name="hint_age">Pick Birth Date</string>
+    <string name="hint_photo">Upload Photo</string>
     <string name="hint_dogBreed">Labrador</string>
     <string name="hint_dogGender">M</string>
     <string name="hint_dogAge">4</string>
@@ -64,11 +65,15 @@
     <string name="user_reg">Register User Profile</string>
     <string name="user_id">UserID</string>
     <string name="user_info">User Information</string>
+    <string name="update_user_info">Update User Information</string>
     <string name="first_name">First Name*</string>
     <string name="last_name">Last Name*</string>
     <string name="password">Password</string>
+    <string name="input_current_password">Current Password</string>
     <string name="input_password">Password*</string>
+    <string name="input_new_password">New Password</string>
     <string name="confirm_password">Confirm Password*</string>
+    <string name="confirm_new_password">Confirm New Password</string>
     <string name="phone_number">Phone Number*</string>
     <string name="email">E-mail</string>
     <string name="input_email">E-mail address*</string>
@@ -80,12 +85,14 @@
     </string-array>
     <string name="age">Age</string>
     <string name="input_age">Age*</string>
+    <string name="profile_photo">Profile Photo*</string>
     <string name="match_preference">Looking For*</string>
     <string-array name="matchPreferenceArray">
         <item>Male</item>
         <item>Female</item>
     </string-array>
     <string name="dog_info">Dog Information</string>
+    <string name="Update_dog_info">Update Dog Information</string>
     <string name="dog_name">Dog Name</string>
     <string name="dogBreed">Dog Breed</string>
     <string-array name="dogBreedArray">
@@ -127,6 +134,7 @@
     <string name="last_updated">Last updated on </string>
     <string name="register">Register</string>
     <string name="sign_out">Sign-out</string>
+    <string name="select_photo">Select Photo</string>
 
 
     <!--Main content-->
@@ -165,7 +173,7 @@
     <string name="widget_update_label">Last updated</string>
 
     <!-- Button label for the update button. -->
-    <string name="widget_button_update">Update now</string>
+    <string name="widget_button_update">Update</string>
 
     <!-- Format string for the date & count text view -->
     <string name="date_count_format">%1$d times at %2$s</string>

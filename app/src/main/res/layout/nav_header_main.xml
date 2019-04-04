@@ -4,21 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
-    android:background="@drawable/mountain_background"
+    android:background="#9963789b"
     android:gravity="bottom"
     android:orientation="vertical"
-
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    <!--android:background="@drawable/mountain_background"-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradient_background_teal"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="30dp"
         android:orientation="vertical">
+        <!--android:background="@drawable/gradient_background_teal"-->
 
         <LinearLayout
             android:layout_width="wrap_content"

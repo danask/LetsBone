@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/mountain_background"
     tools:context=".UserRegistrationActivity">
+    <!--android:background="@drawable/mountain_background"-->
 
     <!--<include-->
     <!--android:id="@+id/title_container"-->
@@ -37,26 +37,27 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradient_background_teal"
+        android:background="#9963789b"
         android:orientation="vertical">
+        <!--android:background="@drawable/gradient_background_teal"-->
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="55dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp">
+        <!--<LinearLayout-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="55dp"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="10dp">-->
 
-            <ImageView
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/letsbone_logo" />
-        </LinearLayout>
+        <!--<ImageView-->
+        <!--android:layout_width="250dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:src="@drawable/letsbone_logo" />-->
+        <!--</LinearLayout>-->
 
 
         <ScrollView
             android:id="@+id/scrollViewProfile"
             android:layout_width="match_parent"
-            android:layout_height="520dp"
+            android:layout_height="590dp"
             android:fillViewport="true">
 
             <LinearLayout
@@ -65,18 +66,21 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/title_container"
                 android:layout_marginLeft="10sp"
-                android:layout_marginTop="70dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="10sp"
                 android:layout_marginBottom="0sp"
-                android:background="@drawable/blue_btn_bkg"
                 android:orientation="vertical"
                 android:padding="10dp">
+                <!--android:background="#9963789b"-->
+                <!--android:background="@drawable/blue_btn_bkg"-->
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_gravity="left"
                     android:text="@string/user_info"
+                    android:textColor="#1c1629"
+                    android:textStyle="bold"
                     android:textSize="25dp" />
 
 
@@ -127,8 +131,8 @@
                         android:layout_width="190dp"
                         android:layout_height="match_parent"
                         android:gravity="left"
-                        android:hint="@string/hint_fname"
                         android:paddingRight="20sp" />
+                        <!--android:hint="@string/hint_fname"-->
                 </LinearLayout>
 
                 <!--USER LAST NAME-->
@@ -151,8 +155,8 @@
                         android:layout_width="189dp"
                         android:layout_height="match_parent"
                         android:gravity="left"
-                        android:hint="@string/hint_lname"
                         android:paddingRight="20sp" />
+                        <!--android:hint="@string/hint_lname"-->
                 </LinearLayout>
 
                 <!--USER EMAIL ADDRESS-->
@@ -175,9 +179,9 @@
                         android:layout_width="190dp"
                         android:layout_height="match_parent"
                         android:gravity="left"
-                        android:hint="@string/hint_email"
                         android:inputType="textEmailAddress"
                         android:paddingRight="20sp" />
+                        <!--android:hint="@string/hint_email"-->
                 </LinearLayout>
 
                 <!--USER GENDER-->
@@ -214,18 +218,18 @@
 
                 <!--MATCH PREFERENCE-->
                 <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="49dp"
-                android:orientation="horizontal">
+                    android:layout_width="match_parent"
+                    android:layout_height="49dp"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="170dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="16sp"
-                    android:text="@string/match_preference"
-                    android:textColor="@android:color/black"
-                    android:textSize="18sp" />
+                    <TextView
+                        android:layout_width="170dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="16sp"
+                        android:text="@string/match_preference"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
 
                     <Spinner
                         android:id="@+id/spinnerMatchPreference"
@@ -251,10 +255,12 @@
 
                     <Button
                         android:id="@+id/btnBDatePicker"
-                        android:layout_width="168dp"
+                        android:layout_width="189dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/hint_age" />
+                        android:background="@drawable/blue_btn_bkg"
+                        android:text="@string/hint_age"
+                        android:textColor="#fff" />
 
                     <!--<EditText
                         android:id="@+id/editTextAge"
@@ -281,7 +287,54 @@
                         android:paddingRight="20sp" />-->
                 </LinearLayout>
 
+                <!--USER PHOTO-->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="49dp"
+                    android:orientation="horizontal">
 
+                    <TextView
+                        android:layout_width="170dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="16sp"
+                        android:text="@string/profile_photo"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
+
+                    <Button
+                        android:id="@+id/btnPhotoPicker"
+                        android:layout_width="189dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/blue_btn_bkg"
+                        android:text="@string/hint_photo"
+                        android:textColor="#fff" />
+
+                    <!--<EditText
+                        android:id="@+id/editTextAge"
+                        android:layout_width="190dp"
+                        android:layout_height="match_parent"
+                        android:gravity="left"
+                        android:hint="@string/hint_age"
+                        android:paddingRight="20sp" />-->
+
+                    <!--<Spinner
+                        android:id="@+id/spinnerDogAge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:entries="@array/dogAgeArray" />-->
+
+                    <!--<EditText
+                        android:id="@+id/editTextDogAge"
+                        android:layout_width="190dp"
+                        android:layout_height="match_parent"
+                        android:gravity="left"
+                        android:hint="@string/hint_dogAge"
+                        android:inputType="textEmailAddress"
+                        android:paddingRight="20sp" />-->
+                </LinearLayout>
 
                 <!--USER PASSWORD-->
                 <LinearLayout
@@ -303,9 +356,9 @@
                         android:layout_width="190dp"
                         android:layout_height="match_parent"
                         android:gravity="left"
-                        android:hint="@string/hint_pwd"
                         android:paddingRight="20sp"
                         android:password="true" />
+                        <!--android:hint="@string/hint_pwd"-->
                 </LinearLayout>
 
                 <!--USER CONFIRM PASSWORD-->
@@ -328,16 +381,19 @@
                         android:layout_width="190dp"
                         android:layout_height="match_parent"
                         android:gravity="left"
-                        android:hint="@string/hint_pwd"
                         android:paddingRight="20sp"
                         android:password="true" />
+                        <!--android:hint="@string/hint_pwd"-->
                 </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="30dp"
+                    android:layout_gravity="left"
                     android:text="@string/dog_info"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
                     android:textSize="25dp" />
 
                 <!--DOG NAME-->
@@ -360,8 +416,8 @@
                         android:layout_width="190dp"
                         android:layout_height="match_parent"
                         android:gravity="left"
-                        android:hint="@string/hint_fname"
                         android:paddingRight="20sp" />
+                        <!--android:hint="@string/hint_fname"-->
                 </LinearLayout>
 
                 <!--DOG BREED-->
@@ -464,6 +520,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:orientation="horizontal">
+                    <!--android:background="#9963789b"-->
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -475,7 +532,7 @@
 
                     <TextView
                         android:id="@+id/textViewLastUpdated"
-                        android:layout_width="271dp"
+                        android:layout_width="273dp"
                         android:layout_height="match_parent"
                         android:gravity="left|center_vertical"
                         android:paddingRight="20sp"
@@ -491,10 +548,15 @@
         <include
             android:id="@+id/login_bottom_container"
             layout="@layout/user_bottom_container"
-            android:layout_width="match_parent"
+            android:layout_width="366dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/scrollViewProfile"
-            android:layout_marginTop="00sp" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="23dp"
+            android:layout_marginRight="23dp" />
 
 
     </RelativeLayout>

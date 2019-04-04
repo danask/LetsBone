@@ -179,7 +179,7 @@ public class SignInActivity extends AppCompatActivity {
      */
     private void submitForm() {
         final String email = editTextEmailSignIn.getText().toString().trim();
-        String password = editTextPwdSignIn.getText().toString().trim();
+        final String password = editTextPwdSignIn.getText().toString().trim();
 
         if (TextUtils.isEmpty(editTextEmailSignIn.getText()))
         {
@@ -208,8 +208,8 @@ public class SignInActivity extends AppCompatActivity {
 
                         if (!task.isSuccessful()) {
                             // there was an error
-                            Toast.makeText(SignInActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
-
+                            //Toast.makeText(SignInActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+                            alertDialogPopup();
                         } else {
                             SharedPreferences.Editor editor = sharedPref.edit();
 
@@ -227,6 +227,24 @@ public class SignInActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void alertDialogPopup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(SignInActivity.this);
+        builder.setTitle("Error");
+        builder.setMessage("Login failed. Please enter a valid email address and/or password.");
+        builder.setCancelable(true);
+
+        builder.setNegativeButton(
+                "Close",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
 //    private boolean checkEmail() {
