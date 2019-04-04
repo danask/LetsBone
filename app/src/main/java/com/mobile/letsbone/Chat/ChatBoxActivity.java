@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -26,8 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChatBoxActivity extends AppCompatActivity {
-    //Toolbar
-    Toolbar toolBar;
 
     //RecyclerView
     private RecyclerView mRecyclerView;
@@ -42,7 +39,7 @@ public class ChatBoxActivity extends AppCompatActivity {
     private ArrayList<ChatBoxData> chatBoxDataList = new ArrayList<>();
 
     //Private members
-    private String mUserKey, mMatchKey, mMessageKey, mMatchFirstName, mMatchLastName;
+    private String mUserKey, mMatchKey, mMessageKey, mMatchFirstName, mMatchLastName, mFullName;
     private EditText mMessageBox;
     private Button sendButton;
 
@@ -55,8 +52,16 @@ public class ChatBoxActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
         mMatchKey = getIntent().getExtras().getString("MatchKey");
+        mMatchFirstName = getIntent().getExtras().getString("MatchFirstName");
+        mMatchLastName = getIntent().getExtras().getString("MatchLastName");
         mUserKey = mAuth.getCurrentUser().getUid();
+        mFullName = mMatchFirstName + " " + mMatchLastName;
 
+        //setting action bar title with opposite users full name
+        getSupportActionBar().setTitle(mFullName);
+
+        //action bar back button
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //getting database reference for user
         mDatabaseReferenceUsers = databaseReference
@@ -69,6 +74,7 @@ public class ChatBoxActivity extends AppCompatActivity {
         //getting database reference for messages
         mDatabaseReferenceMessages = FirebaseDatabase.getInstance().getReference().child("Messages");
 
+        //initiating getMessageId method
         getMessageId();
 
         //initiating connection with recycler view
@@ -133,7 +139,7 @@ public class ChatBoxActivity extends AppCompatActivity {
         });
     }
 
-    //method to get messages between useres
+    //method to get messages between users
     private void getMessagesFromFireBase() {
         mDatabaseReferenceMessages.addChildEventListener(new ChildEventListener() {
             @Override

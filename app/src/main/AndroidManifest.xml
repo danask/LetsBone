@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/letsbone_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Chat.ChatBoxActivity" android:exported="true">
+        <activity android:name=".Chat.ChatBoxActivity"
+            android:parentActivityName=".MainActivity">
 
         </activity>
         <activity

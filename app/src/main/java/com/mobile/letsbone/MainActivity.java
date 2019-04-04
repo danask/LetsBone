@@ -169,19 +169,11 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_friendsList:
                 fragment = new UserListFragment();
                 break;
-            case R.id.nav_chat:
-//                fragment = new ChatMenuFragment();
-                fragment = new SocketFragment();
-                break;
             case R.id.nav_user:
                 fragment = new UserFragment();
                 break;
-
             case R.id.nav_settings_delete:
                 deleteAll(currentUser);
-                break;
-            case R.id.nav_settings_reset:
-                deleteAllWithoutUser(currentUser);
                 break;
             default:
                 break;

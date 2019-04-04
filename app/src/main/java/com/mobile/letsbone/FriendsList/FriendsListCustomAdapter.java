@@ -91,8 +91,6 @@ public class FriendsListCustomAdapter extends RecyclerView.Adapter<FriendsListCu
             intent.putExtras(bundle);
             v.getContext().startActivity(intent);
 
-            Toast.makeText(context, matchKey.getText().toString(), Toast.LENGTH_SHORT).show();
-
         }
     }
 }
