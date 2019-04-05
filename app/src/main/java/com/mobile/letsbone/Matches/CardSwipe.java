@@ -1,5 +1,8 @@
 package com.mobile.letsbone.Matches;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -34,6 +37,8 @@ public class CardSwipe extends Fragment {
     private DatabaseReference databaseReference;
     private String currentUserKey;
     ArrayList<ProfileData> al;
+
+    Dialog itsAMatchPopup;
 
     @Nullable
     @Override
@@ -200,6 +205,14 @@ public class CardSwipe extends Fragment {
         });
     }// end of addUserCards method
 
+    //Its a Match pop up
+    public void itsAMatchPopup(){
+        itsAMatchPopup = new Dialog(getContext());
+        itsAMatchPopup.setContentView(R.layout.itsamatchpopup);
+        itsAMatchPopup.show();
+        itsAMatchPopup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+    }
+
     //connect users that liked each other
     private void matchUsers(String userKey){
         DatabaseReference userConnections = databaseReference.child(currentUserKey).child("Connections").child("Yes").child(userKey);
@@ -227,8 +240,7 @@ public class CardSwipe extends Fragment {
                             .child("MessageId")
                             .setValue(messageId);
 
-                    Toast.makeText(getActivity(), "New Connection", Toast.LENGTH_SHORT).show();
-
+                    itsAMatchPopup();
 
                 }
             }
