@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.mobile.letsbone.Entities.ProfileData;
 import com.mobile.letsbone.R;
 
@@ -37,7 +38,15 @@ public class PictureArrayAdapter  extends ArrayAdapter<ProfileData> {
         }
 
         ImageView image =(ImageView)convertView.findViewById(R.id.picture);
-        image.setImageResource(profile_item.getmPhoto());
+        switch (profile_item.getImageUrl()){
+            case"default":
+                Glide.with(convertView.getContext()).load(R.drawable.dog6).into(image);
+                break;
+                default:
+                    Glide.clear(image);
+                    Glide.with(convertView.getContext()).load(profile_item.getImageUrl()).into(image);
+                    break;
+        }
 
         TextView name = (TextView)convertView.findViewById(R.id.profileName);
         name.setText(profile_item.getfName() + " " + profile_item.getlName());

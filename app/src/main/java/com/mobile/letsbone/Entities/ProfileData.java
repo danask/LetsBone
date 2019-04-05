@@ -10,10 +10,9 @@ public class ProfileData {
     private String lookingFor;
     private String imageUrl;
     private int numLikes;
-    private int mPhoto;
 
 
-    public ProfileData(String userId, String fName, String lName, String gender, String age, String location, int numLikes, int mPhoto, String lookingFor) {
+    public ProfileData(String userId, String fName, String lName, String gender, String age, String location, int numLikes, String lookingFor, String imageUrl) {
         this.userId = userId;
         this.fName = fName;
         this.lName = lName;
@@ -21,7 +20,6 @@ public class ProfileData {
         this.age = age;
         this.location = location;
         this.numLikes = numLikes;
-        this.mPhoto = mPhoto;
         this.lookingFor = lookingFor;
         this.imageUrl = imageUrl;
     }
@@ -96,13 +94,8 @@ public class ProfileData {
         this.imageUrl = imageUrl;
     }
 
-    public int getmPhoto() {
-        return mPhoto;
-    }
 
 
-
-    public void setmPhoto(int mPhoto) { this.mPhoto = mPhoto; }
 
 
 }

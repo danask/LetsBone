@@ -25,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -130,7 +131,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
 
         firebaseDatabase = FirebaseDatabase.getInstance();
 
-        storageReference = FirebaseStorage.getInstance().getReference("images");
+        storageReference = FirebaseStorage.getInstance().getReference("images/" + System.currentTimeMillis());
 
         firebaseDatabase.getReference("app_title").setValue("Let's Bone");
 
@@ -284,25 +285,37 @@ public class UserRegistrationActivity extends AppCompatActivity {
 
     private void uploadFiletoFirebaseStorage(){
         if(ImageUri != null){
-            StorageReference fileReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtesnion(ImageUri));
-
-            fileReference.putFile(ImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            storageReference.putFile(ImageUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    String  imageUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
-                    String userID = auth.getCurrentUser().getUid();
-                    databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
-                    Map userInfo = new HashMap<>();
-                    userInfo.put("ImageUrl", imageUrl);
-                    databaseReference.updateChildren(userInfo);
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if(!task.isSuccessful()){
+                        throw task.getException();
+                    }
+                    return storageReference.getDownloadUrl();
                 }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if(task.isSuccessful()){
+                        Uri downloadUri = task.getResult();
+                        String imageUrl = downloadUri.toString();
 
-
+                        String userID = auth.getCurrentUser().getUid();
+                        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
+                        Map userInfo = new HashMap<>();
+                        userInfo.put("ImageUrl", imageUrl);
+                        databaseReference.updateChildren(userInfo);
+                    }
+                }
             });
 
 
         }else{
-            Toast.makeText(this, "no file selected", Toast.LENGTH_SHORT).show();
+            String userID = auth.getCurrentUser().getUid();
+            databaseReference = firebaseDatabase.getInstance().getReference().child("Users").child(userID);
+            Map userInfo = new HashMap<>();
+            userInfo.put("ImageUrl", "default");
+            databaseReference.updateChildren(userInfo);
         }
     }
 
