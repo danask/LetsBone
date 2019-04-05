@@ -2,18 +2,22 @@ package com.mobile.letsbone;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -22,6 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,6 +36,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
+import com.mobile.letsbone.Entities.ProfileData;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -44,6 +56,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
 
     FirebaseAuth auth;
     DatabaseHelper databaseHelper;
+    StorageReference storageReference;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
 
@@ -62,6 +75,8 @@ public class UserRegistrationActivity extends AppCompatActivity {
     final String LNAME = "last name";
     final String PWD = "password";
     final String GENDER = "gender";
+    private Uri ImageUri;
+    private static final int IMAGE_REQUEST = 1;
     int userAge;
 
     EditText editTextFName;
@@ -79,6 +94,9 @@ public class UserRegistrationActivity extends AppCompatActivity {
     Spinner spinnerDogAge;
     Button btnBDatePicker;
     EditText editTextDogBreed;
+    Button uploadImageButton;
+
+    ProfileData profileData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,11 +104,6 @@ public class UserRegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.user_activity_registration);
 
         ActionBar actionBar = getSupportActionBar();
-        /*actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setLogo(R.mipmap.ic_launcher_round);
-        actionBar.setDisplayUseLogoEnabled(true);
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#2476a6")));
-        actionBar.setLogo(R.drawable.letsbone_head);*/
         actionBar.hide();
 
         editTextFName = (EditText)findViewById(R.id.editTextFName);
@@ -108,6 +121,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
         spinnerDogGender = (Spinner)findViewById(R.id.spinnerDogGender);
         spinnerDogAge = (Spinner)findViewById(R.id.spinnerDogAge);
         //editTextDogBreed = (EditText)findViewById(R.id.editTextDogBreed);
+        uploadImageButton = findViewById(R.id.btnImage);
 
         final TextView textViewLastUpdated = (TextView)findViewById(R.id.textViewLastUpdated);
         Button regButton = (Button)findViewById(R.id.userRegButton);
@@ -115,6 +129,8 @@ public class UserRegistrationActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
+
+        storageReference = FirebaseStorage.getInstance().getReference("images");
 
         firebaseDatabase.getReference("app_title").setValue("Let's Bone");
 
@@ -171,16 +187,6 @@ public class UserRegistrationActivity extends AppCompatActivity {
             }
         });
 
-        /*editTextPhoneNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus)
-            {
-                if (TextUtils.isEmpty(editTextPhoneNumber.getText()))
-                {
-                    editTextPhoneNumber.setError(getString(R.string.error_field_required));
-                }
-            }
-        });*/
 
         btnBDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,20 +218,14 @@ public class UserRegistrationActivity extends AppCompatActivity {
             }
         });
 
-        /*editTextGender.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        //Image upload button
+        uploadImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus)
-            {
-                if (TextUtils.isEmpty(editTextGender.getText()))
-                {
-                    editTextGender.setError(getString(R.string.error_field_required));
-                }
-                if (editTextGender.getText().length() < 3)
-                {
-                    editTextGender.setError(getString(R.string.error_range));
-                }
+            public void onClick(View v) {
+                openImageStorage();
             }
-        });*/
+        });
+
 
         regButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,67 +244,66 @@ public class UserRegistrationActivity extends AppCompatActivity {
 
                 if(!userEmail.isEmpty() && !userPwd.isEmpty() && !userCPwd.isEmpty())
                 {
+
                     submitForm();
-//                    Cursor cursorUser = databaseHelper.getUserProfileByEmail(userEmail);
-//
-//                    if (cursorUser.getCount() > 0)
-//                    {
-//                        alertDialogPopUp("That e-mail address already exists. Please try again.");
-//                    }
-//                    else {
-//
-//
-//                        if (userPwd.equalsIgnoreCase(userCPwd))
-//                        {
-//                            if(!isValid(userEmail, EMAIL))
-//                                alertDialogPopUp(EMAIL);
-//
-//                            else if(!isValid(userFName, FNAME))
-//                                alertDialogPopUp( FNAME);
-//
-//                            else if(!isValid(userFName, LNAME))
-//                                alertDialogPopUp(LNAME);
-//
-//                            else if(!isValid(userPwd, PWD))
-//                                alertDialogPopUp(PWD);
-//
-//                            else if(!isValid(userPhone, PHONE_NUMBER))
-//                            {
-//                                alertDialogPopUp(PHONE_NUMBER);
-//                            }
-//
-//                            else if(userIncomeNumber < 300)
-//                                alertDialogPopUp(INCOME);
-//
-//                            else
-//                            {
-//                                Toast.makeText(getApplicationContext(), "Registered successfully",Toast.LENGTH_SHORT).show();
-//
-////                                if (databaseHelper.addUser(userFName,
-////                                        userLName,
-////                                        userPwd,
-////                                        userPhone,
-////                                        userEmail,
-////                                        userIncomeNumber,
-////                                        formattedDate
-////                                )) {
-////                                    Toast.makeText(getApplicationContext(), "Registered successfully",Toast.LENGTH_SHORT).show();
-////                                    startActivity(new Intent(getApplicationContext(), SignInActivity.class));
-////                                }
-//                            }
-//
-//                        }
-//                        else {
-//                            alertDialogPopUp(PWD);
-//                        }
-//
-//                    }
                 }
                 else {
                     alertDialogPopUp(EMAIL + " or " +PWD  + " or " +GENDER);
                 }
             }
         });
+    }
+
+    private void openImageStorage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == IMAGE_REQUEST
+                && resultCode == RESULT_OK
+                && data != null
+                && data.getData() != null){
+
+            ImageUri = data.getData();
+
+        }
+    }
+
+    //method to get extension from file
+    private String getFileExtesnion(Uri uri){
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return  mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
+    private void uploadFiletoFirebaseStorage(){
+        if(ImageUri != null){
+            StorageReference fileReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtesnion(ImageUri));
+
+            fileReference.putFile(ImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    String  imageUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
+                    String userID = auth.getCurrentUser().getUid();
+                    databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
+                    Map userInfo = new HashMap<>();
+                    userInfo.put("ImageUrl", imageUrl);
+                    databaseReference.updateChildren(userInfo);
+                }
+
+
+            });
+
+
+        }else{
+            Toast.makeText(this, "no file selected", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
@@ -346,8 +345,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
         if(password.isEmpty()) {
             return;
         }
-//        editTextEmailSignIn.setErrorEnabled(false);
-//        editTextPwdSignIn.setErrorEnabled(false);
+
 
         //authenticate user
         auth.createUserWithEmailAndPassword(email, password)
@@ -361,13 +359,6 @@ public class UserRegistrationActivity extends AppCompatActivity {
 
                         }
                         else {
-                            // TODO: Go to login again or direct to home
-//                            SharedPreferences.Editor editor = sharedPref.edit();
-//
-//                            editor.putString("currentUser", email);
-//                            editor.putString("currentUserName", "-");
-//                            editor.putString("currentUserExtra", "-");
-//                            editor.commit();
 
                             String userID = auth.getCurrentUser().getUid();
                             databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
@@ -383,6 +374,8 @@ public class UserRegistrationActivity extends AppCompatActivity {
                             userInfo.put("DogGender", spinnerDogGender.getSelectedItem().toString());
                             userInfo.put("DogAge", spinnerDogAge.getSelectedItem().toString());
                             databaseReference.updateChildren(userInfo);
+
+                            uploadFiletoFirebaseStorage();
 
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             finish();
@@ -427,7 +420,6 @@ public class UserRegistrationActivity extends AppCompatActivity {
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(UserRegistrationActivity.this);
         builder.setTitle("Error");
-//        builder.setIcon(R.drawable.ic_launcher_round);
         builder.setMessage("Invalid " + type + " value. Please try again");
         builder.setCancelable(true);
 

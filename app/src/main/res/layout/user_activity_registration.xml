@@ -125,7 +125,6 @@
                         android:layout_width="190dp"
                         android:layout_height="match_parent"
                         android:gravity="left"
-                        android:hint="@string/hint_fname"
                         android:paddingRight="20sp" />
                 </LinearLayout>
 
@@ -149,7 +148,6 @@
                         android:layout_width="189dp"
                         android:layout_height="match_parent"
                         android:gravity="left"
-                        android:hint="@string/hint_lname"
                         android:paddingRight="20sp" />
                 </LinearLayout>
 
@@ -173,7 +171,6 @@
                         android:layout_width="190dp"
                         android:layout_height="match_parent"
                         android:gravity="left"
-                        android:hint="@string/hint_email"
                         android:inputType="textEmailAddress"
                         android:paddingRight="20sp" />
                 </LinearLayout>
@@ -280,6 +277,30 @@
                 </LinearLayout>
 
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="49dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="170dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="16sp"
+                        android:text="Photo"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
+
+                    <Button
+                        android:id="@+id/btnImage"
+                        android:layout_width="168dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Upload Photo" />
+
+                </LinearLayout>
+
+
 
                 <!--USER PASSWORD-->
                 <LinearLayout
@@ -358,7 +379,6 @@
                         android:layout_width="190dp"
                         android:layout_height="match_parent"
                         android:gravity="left"
-                        android:hint="@string/hint_fname"
                         android:paddingRight="20sp" />
                 </LinearLayout>
 
