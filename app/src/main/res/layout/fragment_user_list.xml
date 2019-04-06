@@ -15,4 +15,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:padding="10sp" />
+
+    <include
+        layout="@layout/progress_overlay"/>
 </FrameLayout>

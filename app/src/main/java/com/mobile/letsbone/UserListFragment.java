@@ -1,8 +1,10 @@
 package com.mobile.letsbone;
 
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 //import android.app.Fragment;
 import android.preference.PreferenceManager;
@@ -10,11 +12,15 @@ import android.support.v4.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class UserListFragment extends Fragment {
 
@@ -38,33 +45,53 @@ public class UserListFragment extends Fragment {
     private DatabaseReference databaseReference;
     private FirebaseDatabase firebaseDatabase;
     private FirebaseAuth firebaseAuth;
+    private DatabaseReference usersDb;
+    private String currentUserKey;
+    private String parterUserKey;
+    private UserProfile currentUser;
+    private Map userInfo = new HashMap<>();
 
-    private String userId;
-
-//    FirebaseDatabase database = FirebaseDatabase.getInstance();
-//    DatabaseReference myRef = database.getReference("message");
+    AlphaAnimation inAnimation;
+    AlphaAnimation outAnimation;
+    FrameLayout progressBarHolder;
 
     ConstraintLayout myLayout;
-    ArrayList<String> myList = new ArrayList<>(Arrays.asList(
-            "Bob (M)",
-            "Joe (M)",
-            "Buddy (M)",
-            "Blake (F)",
-            "Anna (F)"));
-    ArrayList<Integer> myImageList = new ArrayList<>(Arrays.asList(
-            R.drawable.dog1,
-            R.drawable.dog2,
-            R.drawable.dog3,
-            R.drawable.dog4,
-            R.drawable.dog5));
 
-    ArrayList<String> myDirList = new ArrayList<>(Arrays.asList(
-            "Vancouver, BC",
-            "Surrey, BC",
-            "Coquitlam, BC",
-            "Burnaby, BC",
-            "New Westminster, BC")
-    );
+    ArrayList<String> myList = new ArrayList<>();
+    ArrayList<Integer> myImageList = new ArrayList<>();
+    ArrayList<String> myDirList = new ArrayList<>();
+    ArrayList<String> userKeyList = new ArrayList<>();
+
+//    ArrayList<String> myList = new ArrayList<>(Arrays.asList(
+//            "Bob (M)",
+//            "Joe (M)",
+//            "Buddy (M)",
+//            "Blake (F)",
+//            "Anna (F)"
+//    ));
+//    ArrayList<Integer> myImageList = new ArrayList<>(Arrays.asList(
+//            R.drawable.dog1,
+//            R.drawable.dog2,
+//            R.drawable.dog3,
+//            R.drawable.dog4,
+//            R.drawable.dog5
+//    ));
+//
+//    ArrayList<String> myDirList = new ArrayList<>(Arrays.asList(
+//            "Miniature Schnauzer, Male",
+//            "Yorkshire Terrier, Female",
+//            "Labrador Retriever, Male",
+//            "Chihuahua, Female",
+//            "Poodle, Female")
+//    );
+//
+//    ArrayList<String> userKeyList = new ArrayList<>(Arrays.asList(
+//            "1",
+//            "2",
+//            "3",
+//            "4",
+//            "5"
+//    ));
 
     @Override
     public void onAttach(Context context) {
@@ -78,28 +105,72 @@ public class UserListFragment extends Fragment {
 
         getActivity().setTitle("Friends List");
 
-
-        // Read from the database
-//        myRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                // This method is called once with the initial value and again
-//                // whenever data at this location is updated.
-//                String value = dataSnapshot.getValue(String.class);
-//                Log.d(TAG, "Value is: " + value);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError error) {
-//                // Failed to read value
-//                Log.w(TAG, "Failed to read value.", error.toException());
-//            }
-//        });
+        firebaseAuth = FirebaseAuth.getInstance();
+//        usersDb = FirebaseDatabase.getInstance().getReference().child("Users");
+        currentUserKey = firebaseAuth.getCurrentUser().getUid();
 
 
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
 
-//        loadListView(view);
-//        onClickEvent(view);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                DatabaseReference matchId = FirebaseDatabase.getInstance().getReference().
+                        child("Users").
+                        child(currentUserKey).
+                        child("Connections").
+                        child("Matches");
+
+                matchId.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists())
+                        {
+                            for(DataSnapshot match : dataSnapshot.getChildren())
+                            {
+                                getMatchInfo(match.getKey());
+                            }
+
+                            myList.clear();
+                            myImageList.clear();
+                            myDirList.clear();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object listItem = listView.getItemAtPosition(position);
+                listItem.getClass();
+                Intent i  = new Intent(getContext(),ChatBoxActivity.class);
+
+                i.putExtra("NICKNAME", listItem.toString());
+                i.putExtra("USER_KEY", userKeyList.get(position));
+
+//                Intent intent;
+//                NotificationService.doServiceStart(new Intent(), 9992, "test");
+//                triggerService();
+                updateChat(userKeyList.get(position));
+                startActivity(i);
+            }
+        });
+
     }
 
 
@@ -113,61 +184,80 @@ public class UserListFragment extends Fragment {
 
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         final String currentUser = sharedPref.getString("currentUser", "-");
-
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseAuth = FirebaseAuth.getInstance();
-
-
-        // Temp for test
-//        String userID = firebaseAuth.getCurrentUser().getUid();
-//        databaseReference = FirebaseDatabase.getInstance().getReference().child("UserProfile").child(userID);
-//
-//        Map userInfo = new HashMap<>();
-//        userInfo.put("FirstName", "Jane");
-//        userInfo.put("LastName", "March");
-//        userInfo.put("EmailAddress", "jane@dc.com");
-//        userInfo.put("Gender", "Female");
-//        userInfo.put("LookingFor", "Female");
-//        userInfo.put("Age", 20);
-//        userInfo.put("DogName", "Jenny");
-//        userInfo.put("DogBreed", "BBB");
-//        userInfo.put("DogGender", "Male");
-//        userInfo.put("DogAge", "Less than 1");
-//        userInfo.put("Likes", 0);
-//        userInfo.put("Matches", "iG4CGgTASLSQvBZe9PA7wmj9xTF3");
-//        userInfo.put("Status", 1);
-//
-//        databaseReference.updateChildren(userInfo);
+        progressBarHolder = (FrameLayout) view.findViewById(R.id.progressBarHolder);
 
 
 
-        // get reference to 'users' node
-        databaseReference = firebaseDatabase.getReference("UserProfile");
 
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+
+        return view;
+    }
+
+    public void getMatchInfo(String key)
+    {
+        DatabaseReference matchInfo = FirebaseDatabase.getInstance().getReference().child("Users").child(key);
+
+        matchInfo.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    myList.add(dataSnapshot.child("FirstName").getValue().toString() + " " + dataSnapshot.child("LastName").getValue().toString()
+                            + " " + ((dataSnapshot.child("Gender").getValue().toString().equals("Male"))? "(M)" : "(F)"));
+                    myImageList.add(R.drawable.dog3);
+                    myDirList.add(dataSnapshot.child("DogBreed").getValue().toString() + ", "
+                            + dataSnapshot.child("DogGender").getValue().toString());
+                    userKeyList.add(dataSnapshot.getKey());
+
+
+                    adapter = new ListCustomAdapter(myList, myImageList, myDirList);
+                    listView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+
+    public void updateChat(String partnerUserKey)
+    {
+        final String pKey = partnerUserKey;
+        DatabaseReference currentUserInfo = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserKey);
+
+
+        currentUserInfo.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
-                UserProfile users = null;
+                currentUser = dataSnapshot.getValue(UserProfile.class);
 
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    users = child.getValue(UserProfile.class);
-                    userId = child.getKey();
+                userInfo.put("FirstName", currentUser.getFirstName());
+                userInfo.put("LastName", currentUser.getLastName());
+                userInfo.put("EmailAddress", currentUser.getEmailAddress());
+                userInfo.put("Gender", currentUser.getGender());
+                userInfo.put("LookingFor", currentUser.getLookingFor());
+                userInfo.put("Age", currentUser.getAge());
+                userInfo.put("DogName", currentUser.getDogName());
+                userInfo.put("DogBreed", currentUser.getDogBreed());
+                userInfo.put("DogGender", currentUser.getDogGender());
+                userInfo.put("DogAge", currentUser.getDogAge());
+                userInfo.put("Likes", 0);
 
-                    // Display newly updated name and email
+                if(currentUser.getChat().equalsIgnoreCase(pKey))
+                    userInfo.put("Chat", "");
+                else
+                    userInfo.put("Chat", pKey);
 
-                    if(!users.getEmailAddress().equalsIgnoreCase(currentUser)) {
-                        myList.add(users.getFirstName() + " " + users.getLastName() + ", " + users.getEmailAddress());
-                        myImageList.add(R.drawable.dog3);
-                        myDirList.add("Looking for " + users.getLookingFor());
-                    }
-                }
+                userInfo.put("Status", 1);
 
-
-
-                adapter = new ListCustomAdapter(myList, myImageList, myDirList);
-                listView.setAdapter(adapter);
+                DatabaseReference updateUserInfo = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserKey);
+                updateUserInfo.updateChildren(userInfo);
             }
 
             @Override
@@ -177,88 +267,41 @@ public class UserListFragment extends Fragment {
 
         });
 
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object listItem = listView.getItemAtPosition(position);
-
-//                FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                ft.replace(R.id.content_main, new SocketFragment());
-//                ft.commit();
-
-                listItem.getClass();
-
-
-                Intent i  = new Intent(getContext(),ChatBoxActivity.class);
-                //retreive nickname from textview and add it to intent extra
-                i.putExtra("NICKNAME", listItem.toString());
-
-                startActivity(i);
-
-                //Toast.makeText(getActivity(), "selected chat "+position, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-
-        return view;
     }
 
-
-    private void loadListView(View view)
+    // AsyncTask
+    private class CustomProgressWheel extends AsyncTask<Void, Void, Void>
     {
-        adapter = new ListCustomAdapter(myList, myImageList, myDirList);
-        listView.setAdapter(adapter);
+        @Override
+        protected void onPreExecute()
+        {
+            super.onPreExecute();
+            inAnimation = new AlphaAnimation(0f, 1f);
+            inAnimation.setDuration(200);
+            progressBarHolder.setAnimation(inAnimation);
+            progressBarHolder.setVisibility(View.VISIBLE);
+        }
 
-//        Button addButton = (Button)view.findViewById(R.id.addExpenseItemButton);
-//        ImageButton calButton = (ImageButton)view.findViewById(R.id.imageCalendarButton);
-//        final TextView textViewDate = (TextView)view.findViewById(R.id.textViewChosenDate);
+        @Override
+        protected void onPostExecute(Void value)
+        {
+            super.onPostExecute(value);
+            outAnimation = new AlphaAnimation(1f, 0f);
+            outAnimation.setDuration(200);
+            progressBarHolder.setAnimation(outAnimation);
+            progressBarHolder.setVisibility(View.GONE);
+        }
 
-//        // Default date
-//        String formattedDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
-//        textViewDate.setText(formattedDate);
-//        date = formattedDate;
-
-        // Calendar event
-//        calButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                Calendar c = Calendar.getInstance();
-//                int year = c.get(Calendar.YEAR);
-//                int month = c.get(Calendar.MONTH);
-//                int day = c.get(Calendar.DAY_OF_MONTH);
-//
-//                datePickerDialog = new DatePickerDialog(getActivity(),
-//
-//                        new DatePickerDialog.OnDateSetListener() {
-//                            @Override
-//                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-////                                Toast.makeText(getActivity(), dayOfMonth +"", Toast.LENGTH_SHORT).show();
-//                                String tempDate = ((month < 9)? "0"+(month+1): month+1) + "/" + ((dayOfMonth < 10)? "0"+(dayOfMonth): dayOfMonth) + "/" + year;
-//
-//                                textViewDate.setText(tempDate);
-//                                date = tempDate;  // to save
-//                                loadRecordFromDB(listView, tempDate); // reload
-//                            }
-//                        },
-//                        year, month, day);
-//                datePickerDialog.show();
-//
-//            }
-//        });
-
-        // load records
-//        loadRecordFromDB(listView, date);
-
-//        // Add new items
-//        addButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                addNewRecord(listView);
-//            }
-//        });
+        @Override
+        protected Void doInBackground(Void... values)
+        {
+            try
+            {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 }

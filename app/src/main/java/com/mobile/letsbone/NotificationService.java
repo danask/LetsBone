@@ -12,9 +12,17 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Random;
 
@@ -30,7 +38,11 @@ public class NotificationService extends Service {
     private static final int NOTIFICATION_ID = 1;
     private static final String NOTIFICATION_CHANNEL_ID = "my_notification_channel";
     private String signInUser  = "";
-
+    private DatabaseReference databaseReference;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference usersDb;
+    private FirebaseAuth firebaseAuth;
+    private String currentUserKey;
 
     public NotificationService() {
     }
@@ -43,6 +55,10 @@ public class NotificationService extends Service {
 
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String currentUser = sharedPref.getString("currentUser", "-");
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        usersDb = FirebaseDatabase.getInstance().getReference().child("Users");
+        currentUserKey = firebaseAuth.getCurrentUser().getUid();
 
         //        location = (LocationManager)
 //                getSystemService(Context.LOCATION_SERVICE);
@@ -98,14 +114,32 @@ public class NotificationService extends Service {
 
                 while (true)
                 {
-                    int id = new Random().nextInt(100);
-
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(10000);
 
-                        // TODO: comparing with user came from Firebase
-//                        if(!signInUser.equals(currentUser))
-                            doServiceStart(tempIntent, id, currentUser);
+                        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+
+                        databaseReference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                            {
+                                UserProfile users = null;
+
+                                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                    users = child.getValue(UserProfile.class);
+
+                                    if(users.getChat() != null && users.getChat().equalsIgnoreCase(currentUserKey)) {
+                                        doServiceStart(tempIntent, 1, users.getFirstName() + " " + users.getLastName());
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+
+                        });
                     }
                     catch (Exception e)
                     {
@@ -143,11 +177,11 @@ public class NotificationService extends Service {
                 getApplicationContext(),NOTIFICATION_CHANNEL_ID);
 
        // currently support for local user
-        builder.setTicker("Chat Users Tracking");
+        builder.setTicker("Chat Alarm");
         builder.setSmallIcon(android.R.drawable.stat_notify_more);
         builder.setWhen(System.currentTimeMillis());
-        builder.setContentTitle("Chat Users Tracking");
-        builder.setContentText(name + "-"+id + " signed in Lets Bone");
+        builder.setContentTitle("Chat Alarm");
+        builder.setContentText(name + " want to talk with you");
 
         builder.setContentIntent(intentBack);
         builder.setAutoCancel(true);

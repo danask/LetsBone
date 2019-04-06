@@ -12,10 +12,10 @@
             android:id="@+id/nav_friendsList"
             android:icon="@drawable/friends_icon"
             android:title="Friends List" />
-        <item
-            android:id="@+id/nav_chat"
-            android:icon="@drawable/chat_icon"
-            android:title="Chat" />
+        <!--<item-->
+            <!--android:id="@+id/nav_chat"-->
+            <!--android:icon="@drawable/chat_icon"-->
+            <!--android:title="Chat" />-->
         <item
             android:id="@+id/nav_user"
             android:icon="@drawable/user_icon"
@@ -26,12 +26,24 @@
         <menu>
             <item
                 android:id="@+id/nav_settings_reset"
-                android:icon="@drawable/settings"
-                android:title="Change chat server" />
+                android:icon="@drawable/user12"
+                android:title="@string/settings_sign_out"/>
             <item
                 android:id="@+id/nav_settings_delete"
-                android:icon="@drawable/user12"
-                android:title="Delete Current User" />
+                android:icon="@drawable/sign_out"
+                android:title="Exit" />
+
+            <!--<item-->
+            <!--android:id="@+id/actionReset"-->
+            <!--android:orderInCategory="100"-->
+            <!--android:title="@string/settings_reset"-->
+            <!--app:showAsAction="never" />-->
+            <!--<item-->
+            <!--android:id="@+id/actionDelUser"-->
+            <!--android:orderInCategory="100"-->
+            <!--android:title="@string/settings_delete_user"-->
+            <!--app:showAsAction="never" />-->
+
         </menu>
     </item>
 

@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/content_main"
+    android:background="@color/blueLightBackground"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity"
     >
@@ -11,7 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#9963789b">
+        android:background="@color/blueLightBackground">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,11 +22,10 @@
             <!--android:background="@drawable/gradient_background_teal"-->
 
             <ImageView
-                android:layout_width="350dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/letsbone_logo"
+                android:layout_width="237dp"
+                android:layout_height="94dp"
                 android:layout_gravity="center_horizontal"
-                />
+                android:src="@drawable/letsbone_logo" />
 
         </LinearLayout>
 

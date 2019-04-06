@@ -198,11 +198,11 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(getApplicationContext(), SignInActivity.class));
         }
 
-        if(id == R.id.actionDelUser);
-            // TODO from FB
-
-        if(id == R.id.actionReset);
-            // TODO from FB
+//        if(id == R.id.actionDelUser);
+//            // TODO from FB
+//
+//        if(id == R.id.actionReset);
+//            // TODO from FB
 
         if(id == R.id.actionQuit)
         {
@@ -230,11 +230,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_friendsList:
                 fragment = new UserListFragment();
                 break;
-            case R.id.nav_chat:
-//                fragment = new ChatMenuFragment();
-//                fragment = new SocketFragment();
-                startActivity(new Intent(getApplicationContext(), ChatBoxActivity.class));
-                break;
+//            case R.id.nav_chat:
+//                startActivity(new Intent(getApplicationContext(), ChatBoxActivity.class));
+//                break;
             case R.id.nav_user:
                 fragment = new UserFragment();
                 break;
@@ -243,11 +241,16 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.nav_settings_reset:
 //                deleteAllWithoutUser(currentUser);
+                auth.signOut();
+                startActivity(new Intent(getApplicationContext(), SignInActivity.class));
                 break;
 
             case R.id.nav_settings_delete:
-//                deleteAll(currentUser);
-//                startActivity(new Intent(getApplicationContext(), ChatTabActivity.class));
+                Intent intent = new Intent(this, SignInActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("Exit", true);
+                startActivity(intent);
+                finish();
                 break;
 
             default:
