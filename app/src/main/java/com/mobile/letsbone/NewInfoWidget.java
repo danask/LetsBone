@@ -41,10 +41,6 @@ public class NewInfoWidget extends AppWidgetProvider {
         SharedPreferences prefs = context.getSharedPreferences(SHARED_PREF_FILE, 0);
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
 
-
-
-
-
         // Construct the RemoteViews object.
         final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_info_widget);
 
@@ -65,28 +61,6 @@ public class NewInfoWidget extends AppWidgetProvider {
         final String currentUserKey = firebaseAuth.getCurrentUser().getUid();
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
-
-//        databaseReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-//            {
-//                for (DataSnapshot child : dataSnapshot.getChildren()) {
-//                    noOfCount++;
-//                    System.out.println(noOfCount);
-////                    int count = prefs.getInt("NumOfPeople", 0);
-////                    count++;
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//
-//        });
-//        final UserProfile user = null;
-
-
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -109,9 +83,9 @@ public class NewInfoWidget extends AppWidgetProvider {
 
 
         Cursor c = databaseHelper.getCount();
+
         String countValue = "";
         if(c.getCount() > 0) {
-
 
             while (c.moveToNext()) {
                 countValue = c.getString(c.getColumnIndex("Count"));

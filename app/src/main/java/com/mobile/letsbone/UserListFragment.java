@@ -200,6 +200,10 @@ public class UserListFragment extends Fragment {
                         String imageUrl = dataSnapshot.child("ImageUrl").getValue().toString();
                         myImageList.add(imageUrl);
                     }
+                    else
+                    {
+                        myImageList.add("default");
+                    }
 
                     myDirList.add(dataSnapshot.child("DogBreed").getValue().toString() + ", "
                             + dataSnapshot.child("DogGender").getValue().toString());
@@ -246,8 +250,6 @@ public class UserListFragment extends Fragment {
                 userInfo.put("ImageUrl", currentUser.getImageUrl());
 
                 if(currentUser.getChat() != null && currentUser.getChat().equalsIgnoreCase(pKey))
-                    userInfo.put("Chat", "");
-                else
                     userInfo.put("Chat", pKey);
 
                 userInfo.put("Status", 1);

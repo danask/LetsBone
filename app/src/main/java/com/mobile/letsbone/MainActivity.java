@@ -257,6 +257,9 @@ public class MainActivity extends AppCompatActivity
 
         switch (id)
         {
+            case R.id.nav_home:
+                fragment = new UserListFragment();
+                break;
             case R.id.nav_match:
                 fragment = new CardSwipe();
                 break;

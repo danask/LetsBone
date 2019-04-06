@@ -54,10 +54,12 @@ public class ListCustomAdapter extends BaseAdapter {
         ImageView itemImageView = (ImageView)convertView.findViewById(R.id.imageViewItem);
 //        itemImageView.setImageResource(imageList.get(position));
 
-        Picasso.with(convertView.getContext()).
-                load(imageList.get(position).toString()).fit().centerCrop().
-                placeholder(R.drawable.dog3).into(itemImageView);
-
+        if(!imageList.get(position).toString().equals("default"))
+        {
+            Picasso.with(convertView.getContext()).
+                    load(imageList.get(position).toString()).fit().centerCrop().
+                    placeholder(R.drawable.dog3).into(itemImageView);
+        }
 
         TextView itemTextView = (TextView)convertView.findViewById(R.id.textViewItem);
         itemTextView.setText(dataList.get(position));
