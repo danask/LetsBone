@@ -13,9 +13,10 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@drawable/blue_btn_bkg"
-        android:text="@string/widget_button_update"
+        android:text="@string/update_user_info"
         android:textColor="#fff"
         android:textSize="14sp"
         android:textStyle="bold" />
+        <!--android:text="@string/widget_button_update"-->
 
 </LinearLayout>

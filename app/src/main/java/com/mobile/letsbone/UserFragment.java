@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,9 +56,11 @@ public class UserFragment extends Fragment {
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseUser user = auth.getCurrentUser();
+    String userID = auth.getCurrentUser().getUid();
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
-    DatabaseReference databaseReference2;
+    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+    DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
+    final Map<String, Object> userUpdates = new HashMap<>();
 
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
@@ -68,9 +71,7 @@ public class UserFragment extends Fragment {
     public static final Pattern VALID_PWD_REGEX =
             Pattern.compile("(?=.*[0-9])(?=.*[a-zA-Z])(?=\\S+$).{8,}");  //(?=.*[@#$%^&+=]) for easy input
 
-    String userID = auth.getCurrentUser().getUid();
     private Spinner spinnerMatchPreference;
-    private EditText editTextCurrentPwd;
     private EditText editTextNewPwd;
     private EditText editTextCNewPwd;
     private EditText editTextDogName;
@@ -98,7 +99,6 @@ public class UserFragment extends Fragment {
         final View view = inflater.inflate(R.layout.user_menu_registration, container, false);
 
         spinnerMatchPreference = (Spinner)view.findViewById(R.id.spinnerMatchPreference);
-        editTextCurrentPwd = (EditText)view.findViewById(R.id.editTextCurrentPwd);
         editTextNewPwd = (EditText)view.findViewById(R.id.editTextNewPwd);
         editTextCNewPwd = (EditText)view.findViewById(R.id.editTextCNewPwd);
         editTextDogName = (EditText)view.findViewById(R.id.editTextDogName);
@@ -109,8 +109,8 @@ public class UserFragment extends Fragment {
 
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         final String currentUser = sharedPref.getString("currentUser", "null");
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
 
+        //For loading the values currently in Firebase for the current user to the spinners and edittexts
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -154,44 +154,6 @@ public class UserFragment extends Fragment {
                         }
                     }
                 }
-
-                databaseReference2 = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
-                Map userInfo = new HashMap<>();
-
-                String lookingFor = spinnerMatchPreference.getSelectedItem().toString();
-                final String dogName = editTextDogName.getText().toString();
-                String dogBreed = spinnerDogBreed.getSelectedItem().toString();
-                String dogGender = spinnerDogGender.getSelectedItem().toString();
-                String dogAge = spinnerDogAge.getSelectedItem().toString();
-
-//                editTextDogName.addTextChangedListener(new TextWatcher() {
-//                    Map userInfo = new HashMap<>();
-//
-//                    @Override
-//                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                        Toast.makeText(getContext(), "beforeTextChanged", Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                    @Override
-//                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                        Toast.makeText(getContext(), "onTextChanged", Toast.LENGTH_SHORT).show();
-//                        if(!dogName.equals(String.valueOf(s))) {
-//                            userInfo.put("DogName", editTextDogName.getText().toString());
-//                            databaseReference2.updateChildren(userInfo);
-//                            Toast.makeText(getContext(), "Update Successful", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void afterTextChanged(Editable s) {
-//                        Toast.makeText(getContext(), "afterTextChanged", Toast.LENGTH_SHORT).show();
-//                        if(!dogName.equals(String.valueOf(s))) {
-//                            userInfo.put("DogName", editTextDogName.getText().toString());
-//                            databaseReference2.updateChildren(userInfo);
-//                            Toast.makeText(getContext(), "Update Successful", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
             }
 
             @Override
@@ -200,106 +162,62 @@ public class UserFragment extends Fragment {
             }
         });
 
-//        updateButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                submitForm();
-//            }
-//        });
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if((!TextUtils.isEmpty(editTextNewPwd.getText())) && (!TextUtils.isEmpty(editTextCNewPwd.getText()))) {
+                    if(!editTextNewPwd.getText().toString().equals(editTextCNewPwd.getText().toString())) {
+                        alertDialogPopup("Please make sure that the New Password and Confirm New Password are the same.");
+                    } else {
+                        user.updatePassword(editTextNewPwd.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(!task.isSuccessful()) {
+                                    alertDialogPopup("There was a problem with the password change. Please try again.");
+                                }
+                            }
+                        });
+                    }
+                }
+
+                userUpdates.put("LookingFor", spinnerMatchPreference.getSelectedItem().toString());
+                userUpdates.put("DogBreed", spinnerDogBreed.getSelectedItem().toString());
+                userUpdates.put("DogGender", spinnerDogGender.getSelectedItem().toString());
+                userUpdates.put("DogAge", spinnerDogAge.getSelectedItem().toString());
+                databaseReference2.updateChildren(userUpdates);
+                //alertDialogPopup("Your profile has been updated.");
+            }
+        });
+
+        final String dogName = editTextDogName.getText().toString();
+
+        editTextDogName.addTextChangedListener(new TextWatcher() {
+
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!dogName.equals(String.valueOf(s))) {
+                    editTextDogName.setSelection(editTextDogName.length());
+                    userUpdates.put("DogName", editTextDogName.getText().toString());
+                    databaseReference2.updateChildren(userUpdates);
+                }
+            }
+        });
         return view;
     }
 
-    private void submitForm() {
-//        Toast.makeText(getContext(), "submitForm", Toast.LENGTH_SHORT).show();
-//        databaseReference2 = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
-//        Map userInfo = new HashMap<>();
-//
-//        String lookingFor = spinnerMatchPreference.getSelectedItem().toString();
-//        final String dogName = editTextDogName.getText().toString();
-//        String dogBreed = spinnerDogBreed.getSelectedItem().toString();
-//        String dogGender = spinnerDogGender.getSelectedItem().toString();
-//        String dogAge = spinnerDogAge.getSelectedItem().toString();
-//
-//        editTextDogName.addTextChangedListener(new TextWatcher() {
-//            Map userInfo = new HashMap<>();
-//
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                Toast.makeText(getContext(), "beforeTextChanged", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                Toast.makeText(getContext(), "onTextChanged", Toast.LENGTH_SHORT).show();
-//                if(!dogName.equals(String.valueOf(s))) {
-//                    userInfo.put("DogName", editTextDogName.getText().toString());
-//                    databaseReference2.updateChildren(userInfo);
-//                    Toast.makeText(getContext(), "Update Successful", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                Toast.makeText(getContext(), "afterTextChanged", Toast.LENGTH_SHORT).show();
-//                if(!dogName.equals(String.valueOf(s))) {
-//                    userInfo.put("DogName", editTextDogName.getText().toString());
-//                    databaseReference2.updateChildren(userInfo);
-//                    Toast.makeText(getContext(), "Update Successful", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-    }
-
-//    private void loadDataInSpinner() {
-//        ArrayAdapter<UserProfile> lookingForArrayAdapater = new ArrayAdapter<UserProfile>(getContext(), android.R.layout.simple_spinner_dropdown_item, lookingForArray);
-//        spinnerMatchPreference.setAdapter(lookingForArrayAdapater);
-//
-//        spinnerMatchPreference.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                UserProfile userProfile = (UserProfile)parent.getSelectedItem();
-//
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
-//    }
-//
-//
-//    public static boolean isValid(String inputString, String type)
-//    {
-//        boolean returnValue = false;
-//
-//        switch (type)
-//        {
-//            case "email":
-//                Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(inputString);
-//                returnValue = matcher.find();
-//                break;
-//
-//            case "phone number":
-//                returnValue = VALID_PHONE_NUMBER_REGEX.matcher(inputString).find();
-//                break;
-//
-//            case "first name":
-//            case "last name":
-//                returnValue = VALID_NAME_REGEX.matcher(inputString).find();
-//                break;
-//
-//            case "password":
-//                returnValue = VALID_PWD_REGEX.matcher(inputString).find();
-//                break;
-//        }
-//
-//        return returnValue;
-//    }
-
     private void alertDialogPopup(String alertText) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Error");
+        builder.setTitle("Alert");
         builder.setMessage(alertText);
         builder.setCancelable(true);
 

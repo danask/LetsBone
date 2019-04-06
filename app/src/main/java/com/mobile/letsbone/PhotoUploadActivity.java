@@ -148,9 +148,10 @@ public class PhotoUploadActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     Uri imageURL = task.getResult();
+                    String profilePhotoURL = imageURL.toString();
                     //TODO: Get the UID of the photo in Storage and put it as the value of Photo in the DB
                     //databaseReference.child("Photo").setValue(imageURL.toString());
-                    databaseReference.child("Photo").setValue(randomUID);
+                    databaseReference.child("ProfilePhoto").setValue(profilePhotoURL);
                     progressDialog.dismiss();
                     finish();
                 }

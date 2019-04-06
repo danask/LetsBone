@@ -66,6 +66,7 @@
     <string name="user_id">UserID</string>
     <string name="user_info">User Information</string>
     <string name="update_user_info">Update User Information</string>
+    <string name="edit_user_info">Edit User Information</string>
     <string name="first_name">First Name*</string>
     <string name="last_name">Last Name*</string>
     <string name="password">Password</string>

@@ -379,6 +379,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
                             databaseReference.updateChildren(userInfo);
 
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            finish();
                         }
                     }
                 });
