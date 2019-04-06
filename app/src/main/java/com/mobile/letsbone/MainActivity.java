@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -24,6 +25,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +45,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseAuth auth;
+    private DatabaseReference databaseReference;
     DatabaseHelper databaseHelper;
     String date = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
     String photoURL;
@@ -50,6 +58,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         auth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
 
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String currentUser = sharedPref.getString("currentUser", "-");
@@ -88,13 +97,37 @@ public class MainActivity extends AppCompatActivity
         });
 
         //imageViewDrawer
-        ImageView imageViewDrawer = (ImageView)headerView.findViewById(R.id.imageViewDrawer);
+        final ImageView imageViewDrawer = (ImageView)headerView.findViewById(R.id.imageViewDrawer);
         imageViewDrawer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), PhotoUploadActivity.class));
             }
         });
+
+        String currentUserKey = auth.getCurrentUser().getUid();
+        DatabaseReference user = databaseReference.child(currentUserKey);
+
+        //pulling image url from firebase and assigning it to imageViewDrawer
+        user.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    if(dataSnapshot.child("ImageUrl").getValue() != null){
+                        String imageUrl = dataSnapshot.child("ImageUrl").getValue().toString();
+                        Picasso.with(MainActivity.this).load(imageUrl).fit().centerCrop().placeholder(R.drawable.user).into(imageViewDrawer);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+
+
+
+
 
 //        DownloadImageTask downloadImageTask = new DownloadImageTask();
 //        PhotoUploadActivity photoUploadActivity = new PhotoUploadActivity();

@@ -40,7 +40,7 @@ public class PictureArrayAdapter  extends ArrayAdapter<ProfileData> {
         ImageView image =(ImageView)convertView.findViewById(R.id.picture);
         switch (profile_item.getImageUrl()) {
             case "default":
-                Glide.with(convertView.getContext()).load(R.drawable.nodogphoto).into(image);
+                Glide.with(convertView.getContext()).load(R.drawable.nophoto1).into(image);
                 break;
             default:
                 Glide.clear(image);
