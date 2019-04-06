@@ -456,7 +456,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
 
                             uploadFiletoFirebaseStorage();
 
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            startActivity(new Intent(getApplicationContext(), SignInActivity.class));
                             finish();
                         }
                     }
