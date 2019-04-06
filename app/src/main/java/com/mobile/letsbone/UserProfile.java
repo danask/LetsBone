@@ -30,7 +30,7 @@ public class UserProfile {
 
     private Long Status;
 
-    private int profileImage;
+    private String imageUrl;
 
     private String Chat;
 
@@ -155,11 +155,11 @@ public class UserProfile {
     }
 
 
-    public int getProfileImage() {
-        return profileImage;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setProfileImage(int profileImage) {
-        this.profileImage = profileImage;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

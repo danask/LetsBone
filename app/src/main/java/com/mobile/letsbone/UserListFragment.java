@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,7 +54,7 @@ public class UserListFragment extends Fragment {
     FrameLayout progressBarHolder;
 
     ArrayList<String> myList = new ArrayList<>();
-    ArrayList<Integer> myImageList = new ArrayList<>();
+    ArrayList<String> myImageList = new ArrayList<>();
     ArrayList<String> myDirList = new ArrayList<>();
     ArrayList<String> userKeyList = new ArrayList<>();
 
@@ -104,7 +105,7 @@ public class UserListFragment extends Fragment {
         currentUserKey = firebaseAuth.getCurrentUser().getUid();
 
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -193,16 +194,20 @@ public class UserListFragment extends Fragment {
                 if(dataSnapshot.exists()){
                     myList.add(dataSnapshot.child("FirstName").getValue().toString() + " " + dataSnapshot.child("LastName").getValue().toString()
                             + " " + ((dataSnapshot.child("Gender").getValue().toString().equals("Male"))? "(M)" : "(F)"));
-                    myImageList.add(R.drawable.dog3);
+//                    myImageList.add(R.drawable.dog3);
+
+                    if(dataSnapshot.child("ImageUrl").getValue() != null){
+                        String imageUrl = dataSnapshot.child("ImageUrl").getValue().toString();
+                        myImageList.add(imageUrl);
+                    }
+
                     myDirList.add(dataSnapshot.child("DogBreed").getValue().toString() + ", "
                             + dataSnapshot.child("DogGender").getValue().toString());
                     userKeyList.add(dataSnapshot.getKey());
 
 
                     adapter = new ListCustomAdapter(myList, myImageList, myDirList);
-
                     listView.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
                 }
             }
 
@@ -238,6 +243,7 @@ public class UserListFragment extends Fragment {
                 userInfo.put("DogGender", currentUser.getDogGender());
                 userInfo.put("DogAge", currentUser.getDogAge());
                 userInfo.put("Likes", 0);
+                userInfo.put("ImageUrl", currentUser.getImageUrl());
 
                 if(currentUser.getChat() != null && currentUser.getChat().equalsIgnoreCase(pKey))
                     userInfo.put("Chat", "");

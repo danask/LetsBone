@@ -9,15 +9,17 @@ import android.widget.TextView;
 
 
 import java.util.ArrayList;
+import com.squareup.picasso.Picasso;
+import static java.security.AccessController.getContext;
 
 public class ListCustomAdapter extends BaseAdapter {
 
     ArrayList<String> dataList = new ArrayList<>();
-    ArrayList<Integer> imageList = new ArrayList<>();
+    ArrayList<String> imageList = new ArrayList<>();
     ArrayList<String> dataListDir = new ArrayList<>();
 
     public ListCustomAdapter(ArrayList<String> anyDataList,
-                             ArrayList<Integer> anyImageList,
+                             ArrayList<String> anyImageList,
                              ArrayList<String> anyDataListDir){
         this.dataList = anyDataList;
         this.imageList = anyImageList;
@@ -50,12 +52,15 @@ public class ListCustomAdapter extends BaseAdapter {
         }
 
         ImageView itemImageView = (ImageView)convertView.findViewById(R.id.imageViewItem);
-        itemImageView.setImageResource(imageList.get(position));
+//        itemImageView.setImageResource(imageList.get(position));
+
+        Picasso.with(convertView.getContext()).
+                load(imageList.get(position).toString()).fit().centerCrop().
+                placeholder(R.drawable.dog3).into(itemImageView);
+
 
         TextView itemTextView = (TextView)convertView.findViewById(R.id.textViewItem);
         itemTextView.setText(dataList.get(position));
-//        if(dataList.get(position).equals())
-
 
         TextView itemTextViewDir = (TextView)convertView.findViewById(R.id.textViewItemDir);
         itemTextViewDir.setText(dataListDir.get(position));
