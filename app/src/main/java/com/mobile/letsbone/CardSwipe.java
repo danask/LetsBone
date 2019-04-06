@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -22,8 +21,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
-import com.mobile.letsbone.ProfileData;
-import com.mobile.letsbone.R;
 
 import java.util.ArrayList;
 
@@ -61,13 +58,21 @@ public class CardSwipe extends Fragment {
 
         al = new ArrayList<>();
 
+        //when view is created you wont be able to swipe on your own card
+        databaseReference
+                .child(currentUserKey)
+                .child("Connections")
+                .child("No")
+                .child(currentUserKey)
+                .setValue(true);
+
         genderCheck();
 
         //choose your favorite adapter
 
         mAdapter = new PictureArrayAdapter(getActivity(), R.layout.card_item, al);
 
-        SwipeFlingAdapterView flingContainer =(SwipeFlingAdapterView) getView().findViewById(R.id.cardFrame) ;
+        SwipeFlingAdapterView flingContainer = getView().findViewById(R.id.cardFrame) ;
 
         //set the listener and the adapter
         flingContainer.setAdapter(mAdapter);
@@ -134,7 +139,7 @@ public class CardSwipe extends Fragment {
 
 
     private String usersGender;
-    private String oppositeUserSex;
+    private String lookingFor;
     // check the current users gender
     public void genderCheck(){
         String userId = mAuth.getCurrentUser().getUid();
@@ -145,14 +150,14 @@ public class CardSwipe extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                    if(dataSnapshot.child("Gender").getValue()!= null){
-                        usersGender = dataSnapshot.child("Gender").getValue().toString();
+                    if(dataSnapshot.child("LookingFor").getValue()!= null){
+                        usersGender = dataSnapshot.child("LookingFor").getValue().toString();
                         switch (usersGender){
                             case "Male":
-                                oppositeUserSex ="Female";
+                                lookingFor ="Male";
                                 break;
                             case "Female":
-                                oppositeUserSex = "Male";
+                                lookingFor = "Female";
                                 break;
                         }
                     }
@@ -172,19 +177,18 @@ public class CardSwipe extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                if(dataSnapshot.exists() && dataSnapshot.child("Gender").getValue().toString().equals(oppositeUserSex)
-                        && !dataSnapshot.child("connections").child("No").hasChild(currentUserKey)
-                        && !dataSnapshot.child("connections").child("Yes").hasChild(currentUserKey)){
+                if(dataSnapshot.exists()
+                        && dataSnapshot.child("Gender").getValue().toString().equals(lookingFor)
+                        && !dataSnapshot.child("Connections").child("No").hasChild(currentUserKey)
+                        && !dataSnapshot.child("Connections").child("Yes").hasChild(currentUserKey)){
 
                     al.add(new ProfileData(dataSnapshot.getKey(),
                             dataSnapshot.child("FirstName").getValue().toString(),
                             dataSnapshot.child("LastName").getValue().toString(),
                             dataSnapshot.child("Gender").getValue().toString(),
                             dataSnapshot.child("Age").getValue().toString(),
-                            "New WestMinister",
-                            11,
-                            R.drawable.dog6,
-                            "M"));
+                            dataSnapshot.child("LookingFor").getValue().toString(),
+                            dataSnapshot.child("ImageUrl").getValue().toString()));
 
                     mAdapter.notifyDataSetChanged();
                 }

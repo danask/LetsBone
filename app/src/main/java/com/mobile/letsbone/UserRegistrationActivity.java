@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -30,6 +33,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -46,6 +52,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
     DatabaseHelper databaseHelper;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+    StorageReference storageReference;
 
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
@@ -62,21 +69,23 @@ public class UserRegistrationActivity extends AppCompatActivity {
     final String GENDER = "gender";
     final String PWD = "password";
     int userAge;
+    private Uri imageUri;
+    private static final int IMAGE_REQUEST = 1;
 
-    EditText editTextFName;
-    EditText editTextLName;
-    EditText editTextEmail;
-    Spinner spinnerGender;
-    Spinner spinnerMatchPreference;
-    Button btnBDatePicker;
-    Button btnPhotoPicker;
-    EditText editTextPwd;
-    EditText editTextCPwd;
-    EditText dogName;
-    Spinner spinnerDogBreed;
-    Spinner spinnerDogGender;
-    Spinner spinnerDogAge;
-    Button regButton;
+    EditText    editTextFName;
+    EditText    editTextLName;
+    EditText    editTextEmail;
+    Spinner     spinnerGender;
+    Spinner     spinnerMatchPreference;
+    Button      btnBDatePicker;
+    Button      btnPhotoPicker;
+    EditText    editTextPwd;
+    EditText    editTextCPwd;
+    EditText    dogName;
+    Spinner     spinnerDogBreed;
+    Spinner     spinnerDogGender;
+    Spinner     spinnerDogAge;
+    Button      regButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,19 +100,19 @@ public class UserRegistrationActivity extends AppCompatActivity {
         actionBar.setLogo(R.drawable.letsbone_head);*/
         actionBar.hide();
 
-        editTextFName = (EditText)findViewById(R.id.editTextFName);
-        editTextLName = (EditText)findViewById(R.id.editTextLName);
-        editTextPwd = (EditText)findViewById(R.id.editTextPwd);
-        editTextCPwd = (EditText)findViewById(R.id.editTextCPwd);
-        editTextEmail = (EditText)findViewById(R.id.editTextEmail);
-        btnBDatePicker = (Button)findViewById(R.id.btnBDatePicker);
-        btnPhotoPicker = (Button)findViewById(R.id.btnPhotoPicker);
-        spinnerGender = (Spinner)findViewById(R.id.spinnerGender);
-        spinnerMatchPreference = (Spinner)findViewById(R.id.spinnerMatchPreference);
-        dogName = (EditText)findViewById(R.id.editTextDogName);
-        spinnerDogBreed = (Spinner)findViewById(R.id.spinnerDogBreed);
-        spinnerDogGender = (Spinner)findViewById(R.id.spinnerDogGender);
-        spinnerDogAge = (Spinner)findViewById(R.id.spinnerDogAge);
+        editTextFName   = findViewById(R.id.editTextFName);
+        editTextLName   = findViewById(R.id.editTextLName);
+        editTextPwd     = findViewById(R.id.editTextPwd);
+        editTextCPwd    = findViewById(R.id.editTextCPwd);
+        editTextEmail   = findViewById(R.id.editTextEmail);
+        btnBDatePicker  = findViewById(R.id.btnBDatePicker);
+        btnPhotoPicker  = findViewById(R.id.btnPhotoPicker);
+        spinnerGender   = findViewById(R.id.spinnerGender);
+        spinnerMatchPreference  = findViewById(R.id.spinnerMatchPreference);
+        dogName                 = findViewById(R.id.editTextDogName);
+        spinnerDogBreed         = findViewById(R.id.spinnerDogBreed);
+        spinnerDogGender        = findViewById(R.id.spinnerDogGender);
+        spinnerDogAge           = findViewById(R.id.spinnerDogAge);
 
         final TextView textViewLastUpdated = (TextView)findViewById(R.id.textViewLastUpdated);
         regButton = (Button)findViewById(R.id.userRegButton);
@@ -111,7 +120,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-
+        storageReference = FirebaseStorage.getInstance().getReference("images/" + System.currentTimeMillis());
         firebaseDatabase.getReference("app_title").setValue("Let's Bone");
 
         firebaseDatabase.getReference("app_title").addValueEventListener(new ValueEventListener() {
@@ -132,6 +141,13 @@ public class UserRegistrationActivity extends AppCompatActivity {
         final String formattedDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
         textViewLastUpdated.setText("Created on "+ formattedDate);
         //editTextGender.setHint("M, F, or H");
+
+        btnPhotoPicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openImageStorage();
+            }
+        });
 
 
 
@@ -253,6 +269,66 @@ public class UserRegistrationActivity extends AppCompatActivity {
         return userAge;
     }
 
+    //Image upload button
+
+
+    //open image files from emulator
+    private void openImageStorage(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, IMAGE_REQUEST);
+    }
+
+    //Overide onActivityResult method
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == IMAGE_REQUEST
+                && resultCode == RESULT_OK
+                && data != null
+                && data.getData() != null){
+
+            imageUri = data.getData();
+        }
+    }//end of onActivityResult method
+
+    //upload image to firebase storage method
+    private void uploadFiletoFirebaseStorage(){
+        if(imageUri != null){
+            storageReference.putFile(imageUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if(!task.isSuccessful()){
+                        throw task.getException();
+                    }
+                    return storageReference.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if(task.isSuccessful()){
+                        Uri downloadUri = task.getResult();
+                        String imageUrl = downloadUri.toString();
+
+                        String userID = auth.getCurrentUser().getUid();
+                        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
+                        Map userInfo = new HashMap<>();
+                        userInfo.put("ImageUrl", imageUrl);
+                        databaseReference.updateChildren(userInfo);
+                    }
+                }
+            });
+
+        }else{
+            String userID = auth.getCurrentUser().getUid();
+            databaseReference = firebaseDatabase.getInstance().getReference().child("Users").child(userID);
+            Map userInfo = new HashMap<>();
+            userInfo.put("ImageUrl", "default");
+            databaseReference.updateChildren(userInfo);
+        }
+    }
 
     /**
  * Validating form
@@ -377,6 +453,8 @@ public class UserRegistrationActivity extends AppCompatActivity {
                             userInfo.put("Status", 0);
                             userInfo.put("Matches", "iG4CGgTASLSQvBZe9PA7wmj9xTF3");
                             databaseReference.updateChildren(userInfo);
+
+                            uploadFiletoFirebaseStorage();
 
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             finish();

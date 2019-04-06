@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.mobile.letsbone.ProfileData;
 import com.mobile.letsbone.R;
 
@@ -37,8 +38,15 @@ public class PictureArrayAdapter  extends ArrayAdapter<ProfileData> {
         }
 
         ImageView image =(ImageView)convertView.findViewById(R.id.picture);
-        image.setImageResource(profile_item.getmPhoto());
-
+        switch (profile_item.getImageUrl()) {
+            case "default":
+                Glide.with(convertView.getContext()).load(R.drawable.nodogphoto).into(image);
+                break;
+            default:
+                Glide.clear(image);
+                Glide.with(convertView.getContext()).load(profile_item.getImageUrl()).into(image);
+                break;
+        }
         TextView name = (TextView)convertView.findViewById(R.id.profileName);
         name.setText(profile_item.getfName() + " " + profile_item.getlName());
 
@@ -47,18 +55,6 @@ public class PictureArrayAdapter  extends ArrayAdapter<ProfileData> {
 
         return convertView;
 
-        /*
-        if(listItem == null)
-            listItem = LayoutInflater.from(mContext).inflate(R.layout.card_item,parent,false);
-        ProfileData currentProfile  = profileList.get(position);
-        ImageView image =(ImageView)listItem.findViewById(R.id.picture);
-        image.setImageResource(currentProfile.getmPhoto());
-        TextView name = (TextView)listItem.findViewById(R.id.profileName);
-        name.setText(currentProfile.getfName() + " " + currentProfile.getlName());
-        TextView age = (TextView)listItem.findViewById(R.id.profileAge);
-        age.setText(currentProfile.getAge());
-        return listItem;
-        */
     }
 
 }
