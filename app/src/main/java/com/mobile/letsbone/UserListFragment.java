@@ -43,19 +43,14 @@ public class UserListFragment extends Fragment {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private DatabaseReference databaseReference;
-    private FirebaseDatabase firebaseDatabase;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference usersDb;
     private String currentUserKey;
-    private String parterUserKey;
     private UserProfile currentUser;
     private Map userInfo = new HashMap<>();
 
     AlphaAnimation inAnimation;
     AlphaAnimation outAnimation;
     FrameLayout progressBarHolder;
-
-    ConstraintLayout myLayout;
 
     ArrayList<String> myList = new ArrayList<>();
     ArrayList<Integer> myImageList = new ArrayList<>();
@@ -106,7 +101,6 @@ public class UserListFragment extends Fragment {
         getActivity().setTitle("Friends List");
 
         firebaseAuth = FirebaseAuth.getInstance();
-//        usersDb = FirebaseDatabase.getInstance().getReference().child("Users");
         currentUserKey = firebaseAuth.getCurrentUser().getUid();
 
 
@@ -186,11 +180,6 @@ public class UserListFragment extends Fragment {
         final String currentUser = sharedPref.getString("currentUser", "-");
         progressBarHolder = (FrameLayout) view.findViewById(R.id.progressBarHolder);
 
-
-
-
-
-
         return view;
     }
 
@@ -211,6 +200,7 @@ public class UserListFragment extends Fragment {
 
 
                     adapter = new ListCustomAdapter(myList, myImageList, myDirList);
+
                     listView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                 }
@@ -249,7 +239,7 @@ public class UserListFragment extends Fragment {
                 userInfo.put("DogAge", currentUser.getDogAge());
                 userInfo.put("Likes", 0);
 
-                if(currentUser.getChat().equalsIgnoreCase(pKey))
+                if(currentUser.getChat() != null && currentUser.getChat().equalsIgnoreCase(pKey))
                     userInfo.put("Chat", "");
                 else
                     userInfo.put("Chat", pKey);
