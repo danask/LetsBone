@@ -168,7 +168,7 @@
 
     <!-- widget -->
     <!-- Heading for the app widget ID panel. -->
-    <string name="widget_id_label">Available people to chat</string>
+    <string name="widget_id_label">Number of available people</string>
 
     <!-- Heading for the updated panel. -->
     <string name="widget_update_label">Last updated</string>

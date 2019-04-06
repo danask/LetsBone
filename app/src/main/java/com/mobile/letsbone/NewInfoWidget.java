@@ -6,7 +6,18 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.widget.RemoteViews;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -20,17 +31,22 @@ public class NewInfoWidget extends AppWidgetProvider {
     private static final String SHARED_PREF_FILE =
                                 "com.mobile.letsbone.infowidget";
     private static final String COUNT_KEY = "count";
+    private static int noOfCount = 0;
 
-
-    static void updateAppWidget(Context context,
+    static void updateAppWidget(final Context context,
                                 AppWidgetManager appWidgetManager,
                                 int appWidgetId)
     {
         // 1. LOAD & VIEW
         SharedPreferences prefs = context.getSharedPreferences(SHARED_PREF_FILE, 0);
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+
+
+
+
 
         // Construct the RemoteViews object.
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_info_widget);
+        final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_info_widget);
 
         // Get count
         int count = prefs.getInt(COUNT_KEY + appWidgetId, 0);
@@ -42,9 +58,71 @@ public class NewInfoWidget extends AppWidgetProvider {
         String dateString = DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date());
 
         // TODO: People count from Firebase
-        int numOfPeople = 1;
+        int numOfPeople = 0;
 
-        views.setTextViewText(R.id.appwidget_id, String.valueOf(numOfPeople));  // this should be from # of chat
+        DatabaseReference databaseReference;
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        final String currentUserKey = firebaseAuth.getCurrentUser().getUid();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+//            {
+//                for (DataSnapshot child : dataSnapshot.getChildren()) {
+//                    noOfCount++;
+//                    System.out.println(noOfCount);
+////                    int count = prefs.getInt("NumOfPeople", 0);
+////                    count++;
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//
+//        });
+//        final UserProfile user = null;
+
+
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                DatabaseHelper databaseHelper = new DatabaseHelper(context);
+                int count = 0;
+                for (DataSnapshot snap: dataSnapshot.getChildren()) {
+                    count++;
+                    Log.e(snap.getKey(),snap.getChildrenCount() + " total :" + count);
+                }
+                databaseHelper.setCount(count);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+        Cursor c = databaseHelper.getCount();
+        String countValue = "";
+        if(c.getCount() > 0) {
+
+
+            while (c.moveToNext()) {
+                countValue = c.getString(c.getColumnIndex("Count"));
+            }
+
+            System.out.println("--------------------- " + countValue  + "--------------------");
+        }
+
+//        System.out.println(user.getLikes());
+
+        views.setTextViewText(R.id.appwidget_id, countValue);  // this should be from # of chat
         views.setTextViewText(R.id.appwidget_update,
                                 context.getResources().getString(
                                                         R.string.date_count_format,
@@ -105,5 +183,7 @@ public class NewInfoWidget extends AppWidgetProvider {
 //    public void onDisabled(Context context) {
 //        // Enter relevant functionality for when the last widget is disabled
 //    }
+
+
 }
 

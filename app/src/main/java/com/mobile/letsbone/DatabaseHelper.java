@@ -2,13 +2,14 @@ package com.mobile.letsbone;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper
 {
     final static String DB_NAME = "LetsBone.db";
-    final static int DB_VER = 2;
+    final static int DB_VER = 3;
     final static String CHAT_LOG_TBL = "chatLogTable";
 
     // common
@@ -46,6 +47,13 @@ public class DatabaseHelper extends SQLiteOpenHelper
         {
             e.printStackTrace();
         }
+
+        String query = "create table if not exists " +
+                "CountTBL(ID INTEGER PRIMARY KEY, " +
+                "Count INTEGER)";
+
+        db.execSQL(query);
+
     }
 
     @Override
@@ -77,6 +85,32 @@ public class DatabaseHelper extends SQLiteOpenHelper
             return false;
         else
             return true;
+    }
+
+
+
+    public boolean setCount(int count)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("Count", count);
+
+        long r = db.insert("CountTBL", null, contentValues);
+
+        if(r == -1)
+            return false;
+        else
+            return true;
+    }
+
+
+    public Cursor getCount()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String query = "select * from CountTBL";
+        Cursor c = db.rawQuery(query, null);
+        return  c;
     }
 
 }
