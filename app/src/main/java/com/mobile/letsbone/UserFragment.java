@@ -175,12 +175,15 @@ public class UserFragment extends Fragment {
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(!task.isSuccessful()) {
                                     alertDialogPopup("There was a problem with the password change. Please try again.");
+                                } else {
+                                    alertDialogPopup("Your password has been changed.");
                                 }
                             }
                         });
                     }
                 }
-
+                
+                userUpdates.put("DogName", editTextDogName.getText().toString());
                 userUpdates.put("LookingFor", spinnerMatchPreference.getSelectedItem().toString());
                 userUpdates.put("DogBreed", spinnerDogBreed.getSelectedItem().toString());
                 userUpdates.put("DogGender", spinnerDogGender.getSelectedItem().toString());
@@ -190,28 +193,28 @@ public class UserFragment extends Fragment {
             }
         });
 
-        final String dogName = editTextDogName.getText().toString();
+//         final String dogName = editTextDogName.getText().toString();
 
-        editTextDogName.addTextChangedListener(new TextWatcher() {
+//         editTextDogName.addTextChangedListener(new TextWatcher() {
 
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+//             @Override
+//             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//             }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
+//             @Override
+//             public void onTextChanged(CharSequence s, int start, int before, int count) {
+//             }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(!dogName.equals(String.valueOf(s))) {
-                    editTextDogName.setSelection(editTextDogName.length());
-                    userUpdates.put("DogName", editTextDogName.getText().toString());
-                    databaseReference2.updateChildren(userUpdates);
-                }
-            }
-        });
+//             @Override
+//             public void afterTextChanged(Editable s) {
+//                 if(!dogName.equals(String.valueOf(s))) {
+//                     editTextDogName.setSelection(editTextDogName.length());
+//                     userUpdates.put("DogName", editTextDogName.getText().toString());
+//                     databaseReference2.updateChildren(userUpdates);
+//                 }
+//             }
+//         });
         return view;
     }
 
