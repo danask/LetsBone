@@ -55,6 +55,8 @@
             android:exported="false" />
 
         <activity android:name=".CardSwipe" />
+	<activity android:name=".ChatBoxActivity" />
+
     </application>
 
 </manifest>
