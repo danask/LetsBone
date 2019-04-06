@@ -2,6 +2,8 @@ package com.mobile.letsbone;
 
 public class UserProfile {
 
+    private String userId;
+
     private Long Age;
 
     private String DogAge;
@@ -28,11 +30,28 @@ public class UserProfile {
 
     private Long Status;
 
+    private int profileImage;
 
+    private String Chat;
+
+    public String getChat() {
+        return Chat;
+    }
+
+    public void setChat(String chat) {
+        Chat = chat;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public Long getAge() {
         return Age;
-
     }
 
     public void setAge(Long age) {
@@ -136,4 +155,11 @@ public class UserProfile {
     }
 
 
+    public int getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(int profileImage) {
+        this.profileImage = profileImage;
+    }
 }
