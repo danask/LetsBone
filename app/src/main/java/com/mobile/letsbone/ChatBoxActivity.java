@@ -135,33 +135,16 @@ public class ChatBoxActivity extends AppCompatActivity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //retrieve the nickname and the message content and fire the event messagedetection
+
                 if(!messagetxt.getText().toString().isEmpty())
                 {
                     socket.emit("messagedetection", currentUser, messagetxt.getText().toString());
-
-                    // make instance of message
-
                     ChatMessage m = new ChatMessage(currentUser, "S" + messagetxt.getText().toString());
-
-
-                    //add the message to the messageList
-
                     MessageList.add(m);
 
-                    // add the new updated list to the dapter
                     chatBoxAdapter = new ChatBoxAdapter(MessageList);
-
-                    // notify the adapter to update the recycler view
-
                     chatBoxAdapter.notifyDataSetChanged();
-
-                    //set the adapter for the recycler view
-
                     myRecylerView.setAdapter(chatBoxAdapter);
-
-
-
                     messagetxt.setText(" ");
 
                     hideKeyboard(ChatBoxActivity.this);
@@ -219,24 +202,10 @@ public class ChatBoxActivity extends AppCompatActivity {
 
                             if(!nickname.equalsIgnoreCase(currentUser))
                             {
-                                // make instance of message
-
                                 ChatMessage m = new ChatMessage(nickname, message);
-
-
-                                //add the message to the messageList
-
                                 MessageList.add(m);
-
-                                // add the new updated list to the dapter
                                 chatBoxAdapter = new ChatBoxAdapter(MessageList);
-
-                                // notify the adapter to update the recycler view
-
                                 chatBoxAdapter.notifyDataSetChanged();
-
-                                //set the adapter for the recycler view
-
                                 myRecylerView.setAdapter(chatBoxAdapter);
                             }
 

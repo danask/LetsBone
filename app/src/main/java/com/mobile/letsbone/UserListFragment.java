@@ -249,7 +249,7 @@ public class UserListFragment extends Fragment {
                 userInfo.put("Likes", 0);
                 userInfo.put("ImageUrl", currentUser.getImageUrl());
 
-                if(currentUser.getChat() != null && currentUser.getChat().equalsIgnoreCase(pKey))
+//                if(currentUser.getChat() != null && currentUser.getChat().equalsIgnoreCase(pKey))
                     userInfo.put("Chat", pKey);
 
                 userInfo.put("Status", 1);
